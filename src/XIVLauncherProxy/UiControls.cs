@@ -317,7 +317,15 @@ internal sealed class ModernCheckBox : CheckBox
         Cursor = Cursors.Hand;
         Font = new Font("Microsoft YaHei UI", 9F);
         SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
-                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
+                 ControlStyles.Opaque, true);
+        UpdateStyles();
+    }
+
+    protected override void OnPaintBackground(PaintEventArgs pevent)
+    {
+        // The entire background is painted together in OnPaint to avoid a visible
+        // erase pass when sibling controls change state.
     }
 
     public override Size GetPreferredSize(Size proposedSize)
@@ -361,7 +369,7 @@ internal sealed class ModernCheckBox : CheckBox
 
     protected override void OnPaint(PaintEventArgs e)
     {
-        base.OnPaintBackground(e);
+        e.Graphics.Clear(BackColor);
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
         e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
