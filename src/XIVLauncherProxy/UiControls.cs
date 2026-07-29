@@ -128,14 +128,14 @@ internal sealed class ModernComboBox : Control
 
     public ModernComboBox()
     {
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
+                 ControlStyles.Selectable | ControlStyles.SupportsTransparentBackColor, true);
         BackColor = Color.Transparent;
         Height = 34;
         TabStop = true;
         Cursor = Cursors.Hand;
         Font = new Font("Microsoft YaHei UI", 9F);
-        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
-                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
-                 ControlStyles.Selectable | ControlStyles.SupportsTransparentBackColor, true);
 
         dropDown.AutoSize = false;
         dropDown.ShowImageMargin = false;
