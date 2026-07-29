@@ -106,62 +106,303 @@ internal sealed class ModernTextBox : UserControl
     }
 }
 
-internal sealed class ModernComboBox : UserControl
+internal sealed class ModernComboBox : Control
 {
-    private readonly ComboBox editor = new();
-    private bool focused;
+    private sealed class DropDownColors : ProfessionalColorTable
+    {
+        public override Color ToolStripDropDownBackground => Theme.Surface;
+        public override Color MenuBorder => Theme.Border;
+        public override Color MenuItemBorder => Color.Transparent;
+        public override Color MenuItemSelected => Color.FromArgb(239, 237, 252);
+        public override Color MenuItemSelectedGradientBegin => MenuItemSelected;
+        public override Color MenuItemSelectedGradientEnd => MenuItemSelected;
+        public override Color ImageMarginGradientBegin => Theme.Surface;
+        public override Color ImageMarginGradientMiddle => Theme.Surface;
+        public override Color ImageMarginGradientEnd => Theme.Surface;
+    }
+
+    private readonly ContextMenuStrip dropDown = new();
+    private readonly List<string> items = new();
+    private int selectedIndex = -1;
+    private bool hovered;
 
     public ModernComboBox()
     {
-        BackColor = Theme.Surface;
+        BackColor = Color.Transparent;
         Height = 34;
-        Padding = new Padding(5, 4, 4, 3);
+        TabStop = true;
+        Cursor = Cursors.Hand;
+        Font = new Font("Microsoft YaHei UI", 9F);
         SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
-                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
+                 ControlStyles.Selectable | ControlStyles.SupportsTransparentBackColor, true);
 
-        editor.DropDownStyle = ComboBoxStyle.DropDownList;
-        editor.FlatStyle = FlatStyle.Flat;
-        editor.BackColor = Theme.Surface;
-        editor.ForeColor = Theme.Text;
-        editor.Font = new Font("Microsoft YaHei UI", 9F);
-        editor.Cursor = Cursors.Hand;
-        editor.Dock = DockStyle.Fill;
-        editor.IntegralHeight = true;
-        editor.Enter += (_, _) => { focused = true; Invalidate(); };
-        editor.Leave += (_, _) => { focused = false; Invalidate(); };
-        Controls.Add(editor);
+        dropDown.AutoSize = false;
+        dropDown.ShowImageMargin = false;
+        dropDown.ShowCheckMargin = false;
+        dropDown.BackColor = Theme.Surface;
+        dropDown.ForeColor = Theme.Text;
+        dropDown.Font = Font;
+        dropDown.Padding = new Padding(2);
+        dropDown.Renderer = new ToolStripProfessionalRenderer(new DropDownColors())
+        {
+            RoundedEdges = true
+        };
+        dropDown.Closed += (_, _) => Invalidate();
     }
 
-    public ComboBox.ObjectCollection Items => editor.Items;
+    public List<string> Items => items;
 
     public int SelectedIndex
     {
-        get => editor.SelectedIndex;
-        set => editor.SelectedIndex = value;
+        get => selectedIndex;
+        set
+        {
+            int newValue = value >= 0 && value < items.Count ? value : -1;
+            if (selectedIndex == newValue)
+                return;
+
+            selectedIndex = newValue;
+            Invalidate();
+        }
     }
 
-    public object? SelectedItem
+    public string? SelectedItem
     {
-        get => editor.SelectedItem;
-        set => editor.SelectedItem = value;
+        get => selectedIndex >= 0 && selectedIndex < items.Count ? items[selectedIndex] : null;
+        set => SelectedIndex = value is null
+            ? -1
+            : items.FindIndex(item => string.Equals(item, value, StringComparison.Ordinal));
     }
 
-    protected override void OnClick(EventArgs e)
+    private void ShowDropDown()
     {
-        base.OnClick(e);
-        editor.Focus();
-        editor.DroppedDown = true;
+        if (dropDown.Visible || items.Count == 0)
+            return;
+
+        dropDown.Items.Clear();
+        foreach (string item in items)
+        {
+            var menuItem = new ToolStripMenuItem(item)
+            {
+                AutoSize = false,
+                Size = new Size(Math.Max(Width - 4, 80), 30),
+                Padding = new Padding(10, 0, 8, 0),
+                ForeColor = Theme.Text,
+                BackColor = Theme.Surface
+            };
+            menuItem.Click += (_, _) =>
+            {
+                SelectedItem = item;
+                Focus();
+            };
+            dropDown.Items.Add(menuItem);
+        }
+
+        dropDown.Size = new Size(Width, items.Count * 30 + dropDown.Padding.Vertical + 2);
+        dropDown.Show(this, new Point(0, Height + 2));
+        Invalidate();
+    }
+
+    protected override void OnMouseEnter(EventArgs e)
+    {
+        base.OnMouseEnter(e);
+        hovered = true;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+        base.OnMouseLeave(e);
+        hovered = false;
+        Invalidate();
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        base.OnMouseDown(e);
+        if (e.Button != MouseButtons.Left)
+            return;
+
+        Focus();
+        ShowDropDown();
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if (e.KeyCode is Keys.Enter or Keys.Space || (e.KeyCode == Keys.Down && e.Alt))
+        {
+            ShowDropDown();
+            e.Handled = true;
+            return;
+        }
+
+        if (e.KeyCode == Keys.Down && selectedIndex < items.Count - 1)
+        {
+            SelectedIndex++;
+            e.Handled = true;
+        }
+        else if (e.KeyCode == Keys.Up && selectedIndex > 0)
+        {
+            SelectedIndex--;
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnGotFocus(EventArgs e)
+    {
+        base.OnGotFocus(e);
+        Invalidate();
+    }
+
+    protected override void OnLostFocus(EventArgs e)
+    {
+        base.OnLostFocus(e);
+        Invalidate();
     }
 
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        using GraphicsPath path = RoundedShape.Create(new Rectangle(0, 0, Width - 1, Height - 1), 6);
-        using var pen = new Pen(focused ? Theme.Accent : Theme.Border, focused ? 2F : 1F);
+        e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+        bool highlighted = Focused || dropDown.Visible;
+        Color background = hovered || highlighted
+            ? Color.FromArgb(249, 249, 253)
+            : Theme.Surface;
+        Color border = highlighted
+            ? Theme.Accent
+            : hovered ? Color.FromArgb(190, 185, 228) : Theme.Border;
+
+        Rectangle bounds = ClientRectangle;
+        bounds.Width--;
+        bounds.Height--;
+        using GraphicsPath path = RoundedShape.Create(bounds, 6);
+        using var brush = new SolidBrush(background);
+        using var pen = new Pen(border, highlighted ? 2F : 1F);
+        e.Graphics.FillPath(brush, path);
         e.Graphics.DrawPath(pen, path);
+
+        Rectangle textBounds = new(11, 0, Math.Max(0, Width - 36), Height);
+        TextRenderer.DrawText(e.Graphics, SelectedItem ?? string.Empty, Font, textBounds, Theme.Text,
+            TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
+            TextFormatFlags.SingleLine | TextFormatFlags.NoPadding);
+
+        int centerX = Width - 17;
+        int centerY = Height / 2;
+        using var arrowPen = new Pen(highlighted ? Theme.Accent : Theme.MutedText, 1.7F)
+        {
+            StartCap = LineCap.Round,
+            EndCap = LineCap.Round
+        };
+        e.Graphics.DrawLines(arrowPen, new[]
+        {
+            new Point(centerX - 4, centerY - 2),
+            new Point(centerX, centerY + 2),
+            new Point(centerX + 4, centerY - 2)
+        });
     }
 }
+
+internal sealed class ModernCheckBox : CheckBox
+{
+    private bool hovered;
+
+    public ModernCheckBox()
+    {
+        AutoSize = true;
+        BackColor = Theme.Surface;
+        Cursor = Cursors.Hand;
+        Font = new Font("Microsoft YaHei UI", 9F);
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+    }
+
+    public override Size GetPreferredSize(Size proposedSize)
+    {
+        Size textSize = TextRenderer.MeasureText(Text, Font, Size.Empty,
+            TextFormatFlags.SingleLine | TextFormatFlags.NoPadding);
+        return new Size(27 + textSize.Width, Math.Max(24, textSize.Height + 6));
+    }
+
+    protected override void OnMouseEnter(EventArgs e)
+    {
+        base.OnMouseEnter(e);
+        hovered = true;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+        base.OnMouseLeave(e);
+        hovered = false;
+        Invalidate();
+    }
+
+    protected override void OnCheckedChanged(EventArgs e)
+    {
+        base.OnCheckedChanged(e);
+        Invalidate();
+    }
+
+    protected override void OnGotFocus(EventArgs e)
+    {
+        base.OnGotFocus(e);
+        Invalidate();
+    }
+
+    protected override void OnLostFocus(EventArgs e)
+    {
+        base.OnLostFocus(e);
+        Invalidate();
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaintBackground(e);
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+        Rectangle box = new(1, (Height - 18) / 2, 17, 17);
+        Color border = Checked || Focused
+            ? Theme.Accent
+            : hovered ? Color.FromArgb(158, 150, 220) : Theme.Border;
+        Color fill = Checked
+            ? (hovered ? Theme.AccentHover : Theme.Accent)
+            : hovered ? Color.FromArgb(247, 246, 253) : Theme.Surface;
+
+        using GraphicsPath boxPath = RoundedShape.Create(box, 4);
+        using var fillBrush = new SolidBrush(Enabled ? fill : Color.FromArgb(235, 237, 242));
+        using var borderPen = new Pen(Enabled ? border : Color.FromArgb(208, 212, 222));
+        e.Graphics.FillPath(fillBrush, boxPath);
+        e.Graphics.DrawPath(borderPen, boxPath);
+
+        if (Checked)
+        {
+            using var checkPen = new Pen(Enabled ? Color.White : Theme.MutedText, 2F)
+            {
+                StartCap = LineCap.Round,
+                EndCap = LineCap.Round,
+                LineJoin = LineJoin.Round
+            };
+            e.Graphics.DrawLines(checkPen, new[]
+            {
+                new Point(box.Left + 4, box.Top + 9),
+                new Point(box.Left + 7, box.Top + 12),
+                new Point(box.Left + 13, box.Top + 5)
+            });
+        }
+
+        Rectangle textBounds = new(27, 0, Math.Max(0, Width - 27), Height);
+        TextRenderer.DrawText(e.Graphics, Text, Font, textBounds,
+            Enabled ? ForeColor : Theme.MutedText,
+            TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
+            TextFormatFlags.SingleLine | TextFormatFlags.NoPadding);
+    }
+}
+
 
 internal enum ModernButtonStyle
 {

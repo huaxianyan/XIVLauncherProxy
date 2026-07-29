@@ -7,8 +7,8 @@ internal sealed class MainForm : Form
     private readonly ModernTextBox launcherPathTextBox = new();
     private readonly ModernComboBox proxySchemeComboBox = new();
     private readonly ModernTextBox proxyAddressTextBox = new();
-    private readonly CheckBox setAllProxyCheckBox = new();
-    private readonly CheckBox bypassLocalCheckBox = new();
+    private readonly ModernCheckBox setAllProxyCheckBox = new();
+    private readonly ModernCheckBox bypassLocalCheckBox = new();
     private readonly ModernButton testProxyButton = new();
     private readonly ToastPanel toast = new();
     private readonly string? initialMessage;
@@ -109,7 +109,7 @@ internal sealed class MainForm : Form
         browseButton.Click += BrowseButton_Click;
 
         var proxyLabel = CreateFieldLabel("本地代理地址", 22, 126);
-        proxySchemeComboBox.Items.AddRange(new object[]
+        proxySchemeComboBox.Items.AddRange(new[]
         {
             "http://", "https://", "socks4://", "socks5://"
         });
@@ -202,14 +202,10 @@ internal sealed class MainForm : Form
         Location = new Point(x, y)
     };
 
-    private static void ConfigureCheckBox(CheckBox checkBox, string text, Point location)
+    private static void ConfigureCheckBox(ModernCheckBox checkBox, string text, Point location)
     {
         checkBox.Text = text;
         checkBox.ForeColor = Theme.Text;
-        checkBox.BackColor = Theme.Surface;
-        checkBox.FlatStyle = FlatStyle.Flat;
-        checkBox.Cursor = Cursors.Hand;
-        checkBox.AutoSize = true;
         checkBox.Location = location;
     }
 
@@ -227,13 +223,12 @@ internal sealed class MainForm : Form
     private void LoadProxyUrl(string proxyUrl)
     {
         string value = proxyUrl.Trim();
-        foreach (object item in proxySchemeComboBox.Items)
+        foreach (string scheme in proxySchemeComboBox.Items)
         {
-            string scheme = item.ToString()!;
             if (!value.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            proxySchemeComboBox.SelectedItem = item;
+            proxySchemeComboBox.SelectedItem = scheme;
             proxyAddressTextBox.Text = value[scheme.Length..];
             return;
         }
