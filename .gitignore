@@ -1,0 +1,9 @@
+src/**/bin/
+src/**/obj/
+dist/
+*.user
+*.lnk
+
+# Legacy local launch scripts; the C# application replaces these.
+/XIVLauncher.bat
+/boot.vbs
