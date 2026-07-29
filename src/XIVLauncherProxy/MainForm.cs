@@ -304,6 +304,9 @@ internal sealed class MainForm : Form
             return;
         }
 
+        // Move focus before disabling the active button; otherwise WinForms
+        // advances focus to the ALL_PROXY checkbox and briefly highlights it.
+        proxyAddressTextBox.FocusEditor();
         testProxyButton.Enabled = false;
         toast.ShowMessage($"正在连接 {uri!.Host}:{uri.Port}...", ToastKind.Info, 0);
 

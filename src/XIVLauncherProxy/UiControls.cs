@@ -90,6 +90,8 @@ internal sealed class ModernTextBox : UserControl
         set => editor.Text = value;
     }
 
+    public void FocusEditor() => editor.Focus();
+
     protected override void OnClick(EventArgs e)
     {
         base.OnClick(e);
