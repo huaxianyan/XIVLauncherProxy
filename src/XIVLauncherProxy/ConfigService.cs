@@ -85,11 +85,11 @@ internal static class ConfigService
         uri = null;
 
         if (!Uri.TryCreate(value.Trim(), UriKind.Absolute, out Uri? parsed)
-            || (parsed.Scheme != Uri.UriSchemeHttp && parsed.Scheme != Uri.UriSchemeHttps)
+            || !IsSupportedProxyScheme(parsed.Scheme)
             || string.IsNullOrWhiteSpace(parsed.Host)
             || parsed.Port is < 1 or > 65535)
         {
-            error = "代理地址格式无效，请使用类似 http://127.0.0.1:37777 的地址。";
+            error = "代理地址格式无效，请选择协议并输入类似 127.0.0.1:37777 的地址。";
             return false;
         }
 
@@ -97,4 +97,10 @@ internal static class ConfigService
         error = string.Empty;
         return true;
     }
+
+    private static bool IsSupportedProxyScheme(string scheme) =>
+        scheme.Equals(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase)
+        || scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase)
+        || scheme.Equals("socks4", StringComparison.OrdinalIgnoreCase)
+        || scheme.Equals("socks5", StringComparison.OrdinalIgnoreCase);
 }

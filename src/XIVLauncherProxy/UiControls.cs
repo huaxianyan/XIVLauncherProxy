@@ -106,6 +106,63 @@ internal sealed class ModernTextBox : UserControl
     }
 }
 
+internal sealed class ModernComboBox : UserControl
+{
+    private readonly ComboBox editor = new();
+    private bool focused;
+
+    public ModernComboBox()
+    {
+        BackColor = Theme.Surface;
+        Height = 34;
+        Padding = new Padding(5, 4, 4, 3);
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+
+        editor.DropDownStyle = ComboBoxStyle.DropDownList;
+        editor.FlatStyle = FlatStyle.Flat;
+        editor.BackColor = Theme.Surface;
+        editor.ForeColor = Theme.Text;
+        editor.Font = new Font("Microsoft YaHei UI", 9F);
+        editor.Cursor = Cursors.Hand;
+        editor.Dock = DockStyle.Fill;
+        editor.IntegralHeight = true;
+        editor.Enter += (_, _) => { focused = true; Invalidate(); };
+        editor.Leave += (_, _) => { focused = false; Invalidate(); };
+        Controls.Add(editor);
+    }
+
+    public ComboBox.ObjectCollection Items => editor.Items;
+
+    public int SelectedIndex
+    {
+        get => editor.SelectedIndex;
+        set => editor.SelectedIndex = value;
+    }
+
+    public object? SelectedItem
+    {
+        get => editor.SelectedItem;
+        set => editor.SelectedItem = value;
+    }
+
+    protected override void OnClick(EventArgs e)
+    {
+        base.OnClick(e);
+        editor.Focus();
+        editor.DroppedDown = true;
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        using GraphicsPath path = RoundedShape.Create(new Rectangle(0, 0, Width - 1, Height - 1), 6);
+        using var pen = new Pen(focused ? Theme.Accent : Theme.Border, focused ? 2F : 1F);
+        e.Graphics.DrawPath(pen, path);
+    }
+}
+
 internal enum ModernButtonStyle
 {
     Primary,

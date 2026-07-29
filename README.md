@@ -6,7 +6,7 @@
 
 1. 运行 `XIVLauncherProxy.exe` 打开设置。
 2. 检查或选择 `XIVLauncher.exe`。
-3. 填写代理地址，例如 `http://127.0.0.1:37777`。
+3. 选择代理协议（HTTP、HTTPS、SOCKS4 或 SOCKS5），填写代理地址，例如 `127.0.0.1:37777`。
 4. 可使用“测试连接”确认代理端口正在监听。
 5. 点击“生成启动快捷方式”。
 6. 程序会在 `XIVLauncherProxy.exe` 所在目录生成 `XIVLauncherProxy.lnk`，以后通过该快捷方式直接启动。

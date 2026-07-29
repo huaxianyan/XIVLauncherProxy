@@ -5,7 +5,8 @@ namespace XIVLauncherProxy;
 internal sealed class MainForm : Form
 {
     private readonly ModernTextBox launcherPathTextBox = new();
-    private readonly ModernTextBox proxyUrlTextBox = new();
+    private readonly ModernComboBox proxySchemeComboBox = new();
+    private readonly ModernTextBox proxyAddressTextBox = new();
     private readonly CheckBox setAllProxyCheckBox = new();
     private readonly CheckBox bypassLocalCheckBox = new();
     private readonly ModernButton testProxyButton = new();
@@ -108,8 +109,16 @@ internal sealed class MainForm : Form
         browseButton.Click += BrowseButton_Click;
 
         var proxyLabel = CreateFieldLabel("本地代理地址", 22, 126);
-        proxyUrlTextBox.Location = new Point(22, 148);
-        proxyUrlTextBox.Size = new Size(542, 34);
+        proxySchemeComboBox.Items.AddRange(new object[]
+        {
+            "http://", "https://", "socks4://", "socks5://"
+        });
+        proxySchemeComboBox.SelectedIndex = 0;
+        proxySchemeComboBox.Location = new Point(22, 148);
+        proxySchemeComboBox.Size = new Size(108, 34);
+
+        proxyAddressTextBox.Location = new Point(138, 148);
+        proxyAddressTextBox.Size = new Size(426, 34);
 
         testProxyButton.Text = "测试连接";
         testProxyButton.ButtonStyle = ModernButtonStyle.Secondary;
@@ -135,7 +144,7 @@ internal sealed class MainForm : Form
         {
             sectionTitle,
             launcherLabel, launcherPathTextBox, browseButton,
-            proxyLabel, proxyUrlTextBox, testProxyButton,
+            proxyLabel, proxySchemeComboBox, proxyAddressTextBox, testProxyButton,
             setAllProxyCheckBox, bypassLocalCheckBox, inheritanceHint
         });
 
@@ -208,17 +217,44 @@ internal sealed class MainForm : Form
     {
         AppConfig config = ConfigService.Load(out string? warning);
         launcherPathTextBox.Text = config.LauncherPath;
-        proxyUrlTextBox.Text = config.ProxyUrl;
+        LoadProxyUrl(config.ProxyUrl);
         setAllProxyCheckBox.Checked = config.SetAllProxy;
         bypassLocalCheckBox.Checked = config.BypassLocalAddresses;
         if (warning is not null)
             toast.ShowMessage(warning, ToastKind.Warning, 5000);
     }
 
+    private void LoadProxyUrl(string proxyUrl)
+    {
+        string value = proxyUrl.Trim();
+        foreach (object item in proxySchemeComboBox.Items)
+        {
+            string scheme = item.ToString()!;
+            if (!value.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            proxySchemeComboBox.SelectedItem = item;
+            proxyAddressTextBox.Text = value[scheme.Length..];
+            return;
+        }
+
+        proxySchemeComboBox.SelectedIndex = 0;
+        proxyAddressTextBox.Text = value;
+    }
+
+    private string GetProxyUrl()
+    {
+        string address = proxyAddressTextBox.Text.Trim();
+        if (ConfigService.TryParseProxyUri(address, out _, out _))
+            return address;
+
+        return $"{proxySchemeComboBox.SelectedItem}{address}";
+    }
+
     private AppConfig GetConfigFromControls() => new()
     {
         LauncherPath = launcherPathTextBox.Text.Trim(),
-        ProxyUrl = proxyUrlTextBox.Text.Trim(),
+        ProxyUrl = GetProxyUrl(),
         SetAllProxy = setAllProxyCheckBox.Checked,
         BypassLocalAddresses = bypassLocalCheckBox.Checked
     };
@@ -267,7 +303,7 @@ internal sealed class MainForm : Form
 
     private async void TestProxyButton_Click(object? sender, EventArgs e)
     {
-        if (!ConfigService.TryParseProxyUri(proxyUrlTextBox.Text, out Uri? uri, out string error))
+        if (!ConfigService.TryParseProxyUri(GetProxyUrl(), out Uri? uri, out string error))
         {
             toast.ShowMessage(error, ToastKind.Warning);
             return;
