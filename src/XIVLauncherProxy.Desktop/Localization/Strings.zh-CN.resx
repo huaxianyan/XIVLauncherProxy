@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="AppTitle" xml:space="preserve"><value>XIVLauncher Proxy</value></data><data name="AppTagline" xml:space="preserve"><value>代理与快捷登录配置</value></data>
+  <data name="General" xml:space="preserve"><value>基础设置</value></data><data name="Profiles" xml:space="preserve"><value>启动配置</value></data>
+  <data name="GeneralTitle" xml:space="preserve"><value>基础设置</value></data><data name="GeneralSubtitle" xml:space="preserve"><value>设置 XIVLauncher 路径和可选的本地代理。</value></data>
+  <data name="ProfilesTitle" xml:space="preserve"><value>启动配置</value></data><data name="ProfilesSubtitle" xml:space="preserve"><value>分别为代理访问和账号快捷登录生成快捷方式。</value></data>
+  <data name="Launcher" xml:space="preserve"><value>XIVLauncher</value></data><data name="LauncherHint" xml:space="preserve"><value>所有启动配置共用这个程序路径。</value></data>
+  <data name="LauncherPath" xml:space="preserve"><value>程序路径</value></data><data name="Browse" xml:space="preserve"><value>浏览</value></data>
+  <data name="ProxySettings" xml:space="preserve"><value>代理设置</value></data><data name="ProxyHint" xml:space="preserve"><value>仅应用到启用了代理的启动配置，不修改系统代理。</value></data>
+  <data name="ProxyAddress" xml:space="preserve"><value>本地代理地址</value></data><data name="TestConnection" xml:space="preserve"><value>测试连接</value></data>
+  <data name="SetAllProxy" xml:space="preserve"><value>同时设置 ALL_PROXY</value></data><data name="BypassLocal" xml:space="preserve"><value>本地地址直接连接</value></data>
+  <data name="SaveGeneral" xml:space="preserve"><value>保存设置</value></data><data name="ProfileListHint" xml:space="preserve"><value>每项对应一个独立快捷方式。</value></data>
+  <data name="Add" xml:space="preserve"><value>新建</value></data><data name="Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="ProfileName" xml:space="preserve"><value>配置名称</value></data><data name="UseProxy" xml:space="preserve"><value>使用代理</value></data>
+  <data name="UseQuickLogin" xml:space="preserve"><value>自动填写登录验证码</value></data><data name="Account" xml:space="preserve"><value>XIVLauncher 账号</value></data>
+  <data name="RefreshAccounts" xml:space="preserve"><value>刷新账号</value></data><data name="TotpSecret" xml:space="preserve"><value>TOTP 密钥</value></data>
+  <data name="TotpHint" xml:space="preserve"><value>支持 Base32 密钥或 otpauth:// 地址。</value></data><data name="ClearSecret" xml:space="preserve"><value>清除密钥</value></data>
+  <data name="CredentialSaved" xml:space="preserve"><value>已为这个账号保存密钥，留空即可继续使用。</value></data><data name="CredentialMissing" xml:space="preserve"><value>这个账号尚未保存密钥。</value></data>
+  <data name="SaveProfile" xml:space="preserve"><value>保存配置</value></data><data name="CreateShortcut" xml:space="preserve"><value>生成快捷方式</value></data>
+  <data name="CurrentStatus" xml:space="preserve"><value>当前状态</value></data><data name="StatusReady" xml:space="preserve"><value>可以开始配置</value></data>
+  <data name="StatusSummary" xml:space="preserve"><value>{0} 个启动配置 · 代理 {1} · 快捷登录 {2}</value></data><data name="DefaultProfileName" xml:space="preserve"><value>默认启动</value></data>
+  <data name="NewProfileName" xml:space="preserve"><value>启动配置 {0}</value></data><data name="SettingsSaved" xml:space="preserve"><value>基础设置已保存。</value></data>
+  <data name="ProfileSaved" xml:space="preserve"><value>启动配置已保存。</value></data><data name="ShortcutCreated" xml:space="preserve"><value>快捷方式已生成：{0}</value></data>
+  <data name="AccountsLoaded" xml:space="preserve"><value>已读取 {0} 个启用了 OTP 的账号。</value></data><data name="NoAccounts" xml:space="preserve"><value>没有找到启用了 OTP 的 XIVLauncher 账号。</value></data>
+  <data name="ProxyConnected" xml:space="preserve"><value>已连接到 {0}:{1}。</value></data><data name="ConfirmDeleteProfile" xml:space="preserve"><value>删除启动配置「{0}」？</value></data>
+  <data name="ConfirmClearSecret" xml:space="preserve"><value>清除账号「{0}」保存的快捷登录密钥？</value></data>
+  <data name="LauncherPathMissing" xml:space="preserve"><value>请选择 XIVLauncher.exe。</value></data><data name="LauncherNotFound" xml:space="preserve"><value>所选位置中没有找到 XIVLauncher.exe。</value></data>
+  <data name="LauncherFileInvalid" xml:space="preserve"><value>请选择 XIVLauncher.exe 程序文件。</value></data><data name="ProfilesConflict" xml:space="preserve"><value>启动配置内容发生冲突，请重新创建对应配置。</value></data>
+  <data name="ProfileNameMissing" xml:space="preserve"><value>请填写启动配置名称。</value></data><data name="ProfileFeatureMissing" xml:space="preserve"><value>请启用代理、快捷登录或同时启用两者。</value></data>
+  <data name="ProxyAddressInvalid" xml:space="preserve"><value>请输入有效的代理地址，例如 127.0.0.1:37777。</value></data><data name="ProfileAccountMissing" xml:space="preserve"><value>请选择用于快捷登录的 XIVLauncher 账号。</value></data>
+  <data name="ProfileCredentialMissing" xml:space="preserve"><value>请先为这个账号保存 TOTP 密钥。</value></data><data name="ConfigurationReadFailed" xml:space="preserve"><value>无法读取设置，请检查软件配置目录。</value></data>
+  <data name="ConfigurationSaveFailed" xml:space="preserve"><value>无法保存设置，请检查软件配置目录的访问权限。</value></data><data name="AccountsReadFailed" xml:space="preserve"><value>无法读取 XIVLauncher 账号，请先在 XIVLauncher 中保存账号后重试。</value></data>
+  <data name="CredentialSaveFailed" xml:space="preserve"><value>无法为当前 Windows 账号保护快捷登录密钥。</value></data><data name="CredentialReadFailed" xml:space="preserve"><value>当前 Windows 账号无法读取已保存的密钥，请重新保存。</value></data>
+  <data name="LauncherSettingsMissing" xml:space="preserve"><value>没有找到 XIVLauncher 设置，请先正常运行一次 XIVLauncher。</value></data><data name="LauncherSettingsUpdateFailed" xml:space="preserve"><value>无法更新登录方式，请关闭 XIVLauncher 后重试。</value></data>
+  <data name="LauncherStartFailed" xml:space="preserve"><value>XIVLauncher 未能启动，请检查程序路径。</value></data><data name="OtpSubmitFailed" xml:space="preserve"><value>未能发送验证码，请先在 XIVLauncher 中手动输入并检查快捷登录设置。</value></data>
+  <data name="ProxyConnectionFailed" xml:space="preserve"><value>无法连接代理，请确认代理正在运行后重试。</value></data><data name="ShortcutUnsupported" xml:space="preserve"><value>当前系统无法创建 Windows 快捷方式。</value></data>
+  <data name="ShortcutCreateFailed" xml:space="preserve"><value>无法生成快捷方式，请检查软件目录的访问权限。</value></data><data name="TotpSecretMissing" xml:space="preserve"><value>请输入 Base32 密钥或 otpauth:// 地址。</value></data>
+  <data name="TotpSecretInvalidBase32" xml:space="preserve"><value>TOTP 密钥不是有效的 Base32 内容。</value></data><data name="TotpSecretTooShort" xml:space="preserve"><value>TOTP 密钥内容过短。</value></data>
+  <data name="TotpUriInvalid" xml:space="preserve"><value>无法识别这个 otpauth:// 地址。</value></data><data name="TotpAlgorithmUnsupported" xml:space="preserve"><value>当前仅支持 SHA1 类型的 TOTP。</value></data>
+  <data name="TotpDigitsUnsupported" xml:space="preserve"><value>XIVLauncher 登录只接受 6 位验证码。</value></data><data name="TotpPeriodUnsupported" xml:space="preserve"><value>当前仅支持 30 秒周期的 TOTP。</value></data>
+  <data name="ProfileNotFound" xml:space="preserve"><value>这个快捷方式对应的启动配置已不存在，请重新生成。</value></data>
+  <data name="Confirm" xml:space="preserve"><value>确定</value></data><data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="UnexpectedError" xml:space="preserve"><value>操作未能完成，请检查设置后重试。</value></data><data name="WindowsOnly" xml:space="preserve"><value>当前版本暂时只支持 Windows。</value></data>
+</root>

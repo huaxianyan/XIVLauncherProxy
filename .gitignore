@@ -1,5 +1,8 @@
 src/**/bin/
 src/**/obj/
+tests/**/bin/
+tests/**/obj/
+.dotnet/
 dist/
 *.user
 *.lnk

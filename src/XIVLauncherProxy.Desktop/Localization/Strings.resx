@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="AppTitle" xml:space="preserve"><value>XIVLauncher Proxy</value></data>
+  <data name="AppTagline" xml:space="preserve"><value>Proxy and quick login profiles</value></data>
+  <data name="General" xml:space="preserve"><value>General</value></data>
+  <data name="Profiles" xml:space="preserve"><value>Launch profiles</value></data>
+  <data name="GeneralTitle" xml:space="preserve"><value>General settings</value></data>
+  <data name="GeneralSubtitle" xml:space="preserve"><value>Set the XIVLauncher location and optional local proxy.</value></data>
+  <data name="ProfilesTitle" xml:space="preserve"><value>Launch profiles</value></data>
+  <data name="ProfilesSubtitle" xml:space="preserve"><value>Create separate shortcuts for proxy access and account quick login.</value></data>
+  <data name="Launcher" xml:space="preserve"><value>XIVLauncher</value></data>
+  <data name="LauncherHint" xml:space="preserve"><value>All launch profiles use this executable.</value></data>
+  <data name="LauncherPath" xml:space="preserve"><value>Program path</value></data>
+  <data name="Browse" xml:space="preserve"><value>Browse</value></data>
+  <data name="ProxySettings" xml:space="preserve"><value>Proxy settings</value></data>
+  <data name="ProxyHint" xml:space="preserve"><value>Applied only to profiles with proxy enabled. System proxy settings are unchanged.</value></data>
+  <data name="ProxyAddress" xml:space="preserve"><value>Local proxy address</value></data>
+  <data name="TestConnection" xml:space="preserve"><value>Test connection</value></data>
+  <data name="SetAllProxy" xml:space="preserve"><value>Also set ALL_PROXY</value></data>
+  <data name="BypassLocal" xml:space="preserve"><value>Connect to local addresses directly</value></data>
+  <data name="SaveGeneral" xml:space="preserve"><value>Save settings</value></data>
+  <data name="ProfileListHint" xml:space="preserve"><value>Each profile creates an independent shortcut.</value></data>
+  <data name="Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="ProfileName" xml:space="preserve"><value>Profile name</value></data>
+  <data name="UseProxy" xml:space="preserve"><value>Use proxy</value></data>
+  <data name="UseQuickLogin" xml:space="preserve"><value>Fill login verification code automatically</value></data>
+  <data name="Account" xml:space="preserve"><value>XIVLauncher account</value></data>
+  <data name="RefreshAccounts" xml:space="preserve"><value>Refresh accounts</value></data>
+  <data name="TotpSecret" xml:space="preserve"><value>TOTP secret</value></data>
+  <data name="TotpHint" xml:space="preserve"><value>Accepts a Base32 secret or an otpauth:// URI.</value></data>
+  <data name="ClearSecret" xml:space="preserve"><value>Clear secret</value></data>
+  <data name="CredentialSaved" xml:space="preserve"><value>A secret is saved for this account. Leave this field blank to keep it.</value></data>
+  <data name="CredentialMissing" xml:space="preserve"><value>No secret is saved for this account.</value></data>
+  <data name="SaveProfile" xml:space="preserve"><value>Save profile</value></data>
+  <data name="CreateShortcut" xml:space="preserve"><value>Create shortcut</value></data>
+  <data name="CurrentStatus" xml:space="preserve"><value>Current status</value></data>
+  <data name="StatusReady" xml:space="preserve"><value>Ready</value></data>
+  <data name="StatusSummary" xml:space="preserve"><value>{0} profiles · {1} proxy · {2} quick login</value></data>
+  <data name="DefaultProfileName" xml:space="preserve"><value>Default launch</value></data>
+  <data name="NewProfileName" xml:space="preserve"><value>Launch profile {0}</value></data>
+  <data name="SettingsSaved" xml:space="preserve"><value>Settings saved.</value></data>
+  <data name="ProfileSaved" xml:space="preserve"><value>Launch profile saved.</value></data>
+  <data name="ShortcutCreated" xml:space="preserve"><value>Shortcut created: {0}</value></data>
+  <data name="AccountsLoaded" xml:space="preserve"><value>Loaded {0} accounts with OTP enabled.</value></data>
+  <data name="NoAccounts" xml:space="preserve"><value>No XIVLauncher accounts with OTP enabled were found.</value></data>
+  <data name="ProxyConnected" xml:space="preserve"><value>Connected to {0}:{1}.</value></data>
+  <data name="ConfirmDeleteProfile" xml:space="preserve"><value>Delete launch profile “{0}”?</value></data>
+  <data name="ConfirmClearSecret" xml:space="preserve"><value>Clear the saved quick-login secret for “{0}”?</value></data>
+  <data name="LauncherPathMissing" xml:space="preserve"><value>Select XIVLauncher.exe.</value></data>
+  <data name="LauncherNotFound" xml:space="preserve"><value>XIVLauncher.exe was not found at the selected location.</value></data>
+  <data name="LauncherFileInvalid" xml:space="preserve"><value>Select the XIVLauncher.exe program file.</value></data>
+  <data name="ProfilesConflict" xml:space="preserve"><value>The launch profile configuration conflicts. Recreate the affected profile.</value></data>
+  <data name="ProfileNameMissing" xml:space="preserve"><value>Enter a launch profile name.</value></data>
+  <data name="ProfileFeatureMissing" xml:space="preserve"><value>Enable proxy, quick login, or both.</value></data>
+  <data name="ProxyAddressInvalid" xml:space="preserve"><value>Enter a valid proxy address, for example 127.0.0.1:37777.</value></data>
+  <data name="ProfileAccountMissing" xml:space="preserve"><value>Select an XIVLauncher account for quick login.</value></data>
+  <data name="ProfileCredentialMissing" xml:space="preserve"><value>Save a TOTP secret for this account first.</value></data>
+  <data name="ConfigurationReadFailed" xml:space="preserve"><value>The settings file could not be read. Check the application data directory.</value></data>
+  <data name="ConfigurationSaveFailed" xml:space="preserve"><value>Settings could not be saved. Check access to the application data directory.</value></data>
+  <data name="AccountsReadFailed" xml:space="preserve"><value>XIVLauncher accounts could not be read. Save the accounts in XIVLauncher and try again.</value></data>
+  <data name="CredentialSaveFailed" xml:space="preserve"><value>The quick-login secret could not be protected for this Windows account.</value></data>
+  <data name="CredentialReadFailed" xml:space="preserve"><value>The saved secret cannot be read by this Windows account. Save it again.</value></data>
+  <data name="LauncherSettingsMissing" xml:space="preserve"><value>XIVLauncher settings were not found. Run XIVLauncher once and try again.</value></data>
+  <data name="LauncherSettingsUpdateFailed" xml:space="preserve"><value>The login mode could not be updated. Close XIVLauncher and try again.</value></data>
+  <data name="LauncherStartFailed" xml:space="preserve"><value>XIVLauncher did not start. Check the selected program path.</value></data>
+  <data name="OtpSubmitFailed" xml:space="preserve"><value>The verification code could not be sent. Enter it in XIVLauncher and check quick-login settings.</value></data>
+  <data name="ProxyConnectionFailed" xml:space="preserve"><value>The proxy could not be reached. Check that it is running and try again.</value></data>
+  <data name="ShortcutUnsupported" xml:space="preserve"><value>This system cannot create Windows shortcuts.</value></data>
+  <data name="ShortcutCreateFailed" xml:space="preserve"><value>The shortcut could not be created. Check access to the application directory.</value></data>
+  <data name="TotpSecretMissing" xml:space="preserve"><value>Enter a Base32 secret or an otpauth:// URI.</value></data>
+  <data name="TotpSecretInvalidBase32" xml:space="preserve"><value>The TOTP secret is not valid Base32.</value></data>
+  <data name="TotpSecretTooShort" xml:space="preserve"><value>The TOTP secret is too short.</value></data>
+  <data name="TotpUriInvalid" xml:space="preserve"><value>The otpauth:// URI is not valid.</value></data>
+  <data name="TotpAlgorithmUnsupported" xml:space="preserve"><value>Only SHA1 TOTP secrets are supported.</value></data>
+  <data name="TotpDigitsUnsupported" xml:space="preserve"><value>XIVLauncher accepts six-digit verification codes.</value></data>
+  <data name="TotpPeriodUnsupported" xml:space="preserve"><value>Only 30-second TOTP periods are supported.</value></data>
+  <data name="ProfileNotFound" xml:space="preserve"><value>This shortcut no longer matches a launch profile. Create it again.</value></data>
+  <data name="Confirm" xml:space="preserve"><value>OK</value></data><data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="UnexpectedError" xml:space="preserve"><value>The operation could not be completed. Review the settings and try again.</value></data>
+  <data name="WindowsOnly" xml:space="preserve"><value>This version currently supports Windows only.</value></data>
+</root>

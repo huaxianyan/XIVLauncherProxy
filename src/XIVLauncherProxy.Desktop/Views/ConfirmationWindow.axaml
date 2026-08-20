@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="using:XIVLauncherProxy.Desktop.Localization"
+        x:Class="XIVLauncherProxy.Desktop.Views.ConfirmationWindow"
+        Width="420" Height="180" CanResize="False" WindowStartupLocation="CenterOwner"
+        WindowDecorations="BorderOnly" Background="White">
+  <Grid Margin="24" RowDefinitions="*,Auto">
+    <TextBlock x:Name="MessageText" Foreground="#263445" FontSize="15" TextWrapping="Wrap" VerticalAlignment="Center" />
+    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+      <Button Content="{l10n:Tr Cancel}" Click="CancelClick" />
+      <Button Content="{l10n:Tr Confirm}" Classes="primary" Click="OkClick" />
+    </StackPanel>
+  </Grid>
+</Window>

@@ -1,0 +1,24 @@
+<Application xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XIVLauncherProxy.Desktop.App" RequestedThemeVariant="Light">
+  <Application.Styles>
+    <FluentTheme />
+    <Style Selector="Button">
+      <Setter Property="CornerRadius" Value="4"/><Setter Property="Padding" Value="16,8"/>
+    </Style>
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="#3979B9"/><Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style Selector="Button.primary:pointerover"><Setter Property="Background" Value="#2F69A3"/></Style>
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="White"/><Setter Property="BorderBrush" Value="#D8E0E9"/>
+      <Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="8"/><Setter Property="Padding" Value="20"/>
+    </Style>
+    <Style Selector="Button.nav">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="HorizontalContentAlignment" Value="Left"/>
+      <Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="15,11"/>
+    </Style>
+    <Style Selector="Button.nav.active"><Setter Property="Background" Value="#DCEBFA"/><Setter Property="Foreground" Value="#245F99"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="TextBlock.section"><Setter Property="FontSize" Value="17"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="TextBlock.hint"><Setter Property="Foreground" Value="#667487"/><Setter Property="FontSize" Value="12"/></Style>
+  </Application.Styles>
+</Application>
