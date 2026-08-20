@@ -8,14 +8,19 @@ public sealed class ConfigurationValidator(
     ITotpCredentialStore credentials,
     ILauncherInstallation launcherInstallation)
 {
+    public void ValidateLauncherPath(string launcherPath)
+    {
+        if (string.IsNullOrWhiteSpace(launcherPath))
+            throw new ProxyException("LauncherPathMissing");
+        if (!launcherInstallation.Exists(launcherPath))
+            throw new ProxyException("LauncherNotFound");
+        if (!launcherInstallation.HasExpectedFileName(launcherPath))
+            throw new ProxyException("LauncherFileInvalid");
+    }
+
     public void Validate(AppConfiguration configuration)
     {
-        if (string.IsNullOrWhiteSpace(configuration.LauncherPath))
-            throw new ProxyException("LauncherPathMissing");
-        if (!launcherInstallation.Exists(configuration.LauncherPath))
-            throw new ProxyException("LauncherNotFound");
-        if (!launcherInstallation.HasExpectedFileName(configuration.LauncherPath))
-            throw new ProxyException("LauncherFileInvalid");
+        ValidateLauncherPath(configuration.LauncherPath);
         if (configuration.LaunchProfiles.GroupBy(x => x.Id, StringComparer.OrdinalIgnoreCase)
             .Any(group => group.Count() > 1))
             throw new ProxyException("ProfilesConflict");

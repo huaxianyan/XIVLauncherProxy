@@ -14,14 +14,17 @@ Each launch profile can enable:
 
 Quick login waits until XIVLauncher requests an OTP, generates the current code, submits it locally, and restores the previous auto-login setting. Multiple accounts can have separate encrypted TOTP secrets and shortcuts.
 
+Secret import supports Base32, standard `otpauth://` URIs, and Google Authenticator's private `otpauth-migration://` export format. PNG, JPEG, BMP, GIF, and WebP QR images can be selected directly. Multi-account and multi-image exports are combined for account selection. Images are decoded locally and are never uploaded or copied into the configuration directory.
+
 ## Usage
 
 1. Run `XIVLauncherProxy.exe` to open configuration.
 2. Confirm the `XIVLauncher.exe` path and configure an optional local proxy.
 3. Create a launch profile and enable proxy, quick login, or both.
-4. For quick login, select an XIVLauncher account with OTP enabled and enter its Base32 secret or `otpauth://` URI.
-5. Save the profile and create its shortcut.
-6. Launch through `XIVLauncher - Profile name.lnk`.
+4. For quick login, select an XIVLauncher account with OTP enabled and enter its Base32 secret, an `otpauth://` URI, or choose authenticator export images with **Import QR**. Select all images at once when Google Authenticator creates a multi-image export.
+5. If the export contains multiple OTP accounts, select the entry matching the current XIVLauncher account.
+6. Save the profile and create its shortcut.
+7. Launch through `XIVLauncher - Profile name.lnk`.
 
 The XIVLauncher account must have One-Time Password enabled, and `Enable XL Authenticator app/OTP macro support` must be enabled. XIVLauncher auto-login does not need to remain enabled globally.
 

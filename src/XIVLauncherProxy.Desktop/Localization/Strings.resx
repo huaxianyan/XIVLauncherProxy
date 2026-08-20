@@ -57,6 +57,8 @@
   <data name="ProfilesConflict" xml:space="preserve"><value>The launch profile configuration conflicts. Recreate the affected profile.</value></data>
   <data name="ProfileNameMissing" xml:space="preserve"><value>Enter a launch profile name.</value></data>
   <data name="ProfileFeatureMissing" xml:space="preserve"><value>Enable proxy, quick login, or both.</value></data>
+  <data name="ConfigureLauncherFirst" xml:space="preserve"><value>Select a valid XIVLauncher.exe path in General settings first.</value></data>
+  <data name="ConfigureProxyFirst" xml:space="preserve"><value>Enter a valid proxy address in General settings before enabling proxy for this profile.</value></data>
   <data name="ProxyAddressInvalid" xml:space="preserve"><value>Enter a valid proxy address, for example 127.0.0.1:37777.</value></data>
   <data name="ProfileAccountMissing" xml:space="preserve"><value>Select an XIVLauncher account for quick login.</value></data>
   <data name="ProfileCredentialMissing" xml:space="preserve"><value>Save a TOTP secret for this account first.</value></data>
@@ -79,6 +81,19 @@
   <data name="TotpAlgorithmUnsupported" xml:space="preserve"><value>Only SHA1 TOTP secrets are supported.</value></data>
   <data name="TotpDigitsUnsupported" xml:space="preserve"><value>XIVLauncher accepts six-digit verification codes.</value></data>
   <data name="TotpPeriodUnsupported" xml:space="preserve"><value>Only 30-second TOTP periods are supported.</value></data>
+  <data name="ImportQr" xml:space="preserve"><value>Import QR</value></data>
+  <data name="Import" xml:space="preserve"><value>Import</value></data>
+  <data name="SelectQrImages" xml:space="preserve"><value>Select authenticator export QR images</value></data>
+  <data name="ImageFiles" xml:space="preserve"><value>Image files</value></data>
+  <data name="SelectOtpEntry" xml:space="preserve"><value>Select an OTP account</value></data>
+  <data name="SelectOtpEntryHint" xml:space="preserve"><value>The export contains multiple accounts. Select the one to use for this XIVLauncher profile.</value></data>
+  <data name="OtpImported" xml:space="preserve"><value>Imported OTP account: {0}. Save the profile to protect the secret.</value></data>
+  <data name="QrCodeNotFound" xml:space="preserve"><value>No supported OTP QR code was found in the selected images.</value></data>
+  <data name="QrImageReadFailed" xml:space="preserve"><value>An image could not be read. Choose a PNG, JPEG, BMP, GIF, or WebP image.</value></data>
+  <data name="OtpImportFormatUnsupported" xml:space="preserve"><value>The QR code is not a standard OTP or Google Authenticator export.</value></data>
+  <data name="GoogleMigrationInvalid" xml:space="preserve"><value>The Google Authenticator export data is invalid or incomplete.</value></data>
+  <data name="GoogleMigrationEmpty" xml:space="preserve"><value>The Google Authenticator export contains no OTP accounts.</value></data>
+  <data name="OtpTypeUnsupported" xml:space="preserve"><value>HOTP accounts are not supported; select a TOTP account.</value></data>
   <data name="ProfileNotFound" xml:space="preserve"><value>This shortcut no longer matches a launch profile. Create it again.</value></data>
   <data name="Confirm" xml:space="preserve"><value>OK</value></data><data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="UnexpectedError" xml:space="preserve"><value>The operation could not be completed. Review the settings and try again.</value></data>

@@ -1,4 +1,5 @@
 using XIVLauncherProxy.Application.Abstractions;
+using XIVLauncherProxy.Application.Authentication;
 using XIVLauncherProxy.Application.Configuration;
 using XIVLauncherProxy.Application.Launching;
 using XIVLauncherProxy.Application.Errors;
@@ -25,6 +26,7 @@ public sealed class ApplicationComposition
     private readonly IProxyConnectionTester proxyTester;
     private readonly ProfileService profiles;
     private readonly ConfigurationValidator validator;
+    private readonly ImportOtpFromImagesUseCase otpImporter;
 
     private ApplicationComposition(
         IConfigurationStore settings,
@@ -32,6 +34,7 @@ public sealed class ApplicationComposition
         IProxyConnectionTester proxyTester,
         ProfileService profiles,
         ConfigurationValidator validator,
+        ImportOtpFromImagesUseCase otpImporter,
         LaunchProfileUseCase launchProfile)
     {
         Settings = settings;
@@ -39,6 +42,7 @@ public sealed class ApplicationComposition
         this.proxyTester = proxyTester;
         this.profiles = profiles;
         this.validator = validator;
+        this.otpImporter = otpImporter;
         LaunchProfile = launchProfile;
     }
 
@@ -67,10 +71,11 @@ public sealed class ApplicationComposition
             new TcpProxyConnectionTester(),
             profiles,
             validator,
+            new ImportOtpFromImagesUseCase(new ImageSharpQrCodeDecoder()),
             launch);
     }
 
     public MainViewModel CreateMainViewModel(IWindowService windows, string? initialErrorCode) =>
-        new(Settings, accounts, proxyTester, profiles, validator, windows,
+        new(Settings, accounts, proxyTester, profiles, validator, otpImporter, windows,
             ResourceTextLocalizer.Instance, initialErrorCode);
 }

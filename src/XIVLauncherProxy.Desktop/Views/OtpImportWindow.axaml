@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l10n="using:XIVLauncherProxy.Desktop.Localization" xmlns:auth="using:XIVLauncherProxy.Domain.Authentication"
+        x:Class="XIVLauncherProxy.Desktop.Views.OtpImportWindow" Width="520" Height="430" MinWidth="440" MinHeight="340"
+        Title="{l10n:Tr SelectOtpEntry}" Background="#F3F6F9" WindowStartupLocation="CenterOwner">
+  <Grid Margin="24" RowDefinitions="Auto,*,Auto" RowSpacing="14">
+    <StackPanel Spacing="4">
+      <TextBlock Text="{l10n:Tr SelectOtpEntry}" FontSize="20" FontWeight="SemiBold"/>
+      <TextBlock Text="{l10n:Tr SelectOtpEntryHint}" Classes="hint" TextWrapping="Wrap"/>
+    </StackPanel>
+    <ListBox x:Name="EntryList" Grid.Row="1">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="auth:OtpImportEntry">
+          <Border Padding="12" Margin="2" BorderBrush="#D8E0E9" BorderThickness="0,0,0,1">
+            <StackPanel Spacing="3">
+              <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding Issuer}" Classes="hint"/>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+      <Button Content="{l10n:Tr Cancel}" Click="CancelClick"/>
+      <Button Content="{l10n:Tr Import}" Classes="primary" Click="ImportClick"/>
+    </StackPanel>
+  </Grid>
+</Window>

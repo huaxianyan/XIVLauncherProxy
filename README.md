@@ -14,14 +14,17 @@
 
 快捷登录会等待 XIVLauncher 请求 OTP 后生成并提交当前验证码，完成后恢复启动前的自动登录设置。可以为多个账号分别保存 TOTP 密钥并生成独立快捷方式。
 
+密钥输入支持 Base32、标准 `otpauth://` 链接，以及 Google Authenticator 私有的 `otpauth-migration://` 导出格式。可以直接选择包含导出二维码的 PNG、JPEG、BMP、GIF 或 WebP 图片；多账号或多张批次二维码会合并后交给用户选择。二维码仅在本机离线解析，不会上传或复制到配置目录。
+
 ## 使用
 
 1. 运行 `XIVLauncherProxy.exe` 打开配置程序。
 2. 在「基础设置」中确认 `XIVLauncher.exe` 路径；需要代理时填写代理地址。
 3. 在「启动配置」中选择代理、快捷登录或同时启用两者。
-4. 使用快捷登录时，选择 XIVLauncher 中已保存且启用了 OTP 的账号，输入 Base32 TOTP 密钥或 `otpauth://` 地址。
-5. 保存配置并生成快捷方式。
-6. 以后通过 `XIVLauncher - 配置名称.lnk` 启动。
+4. 使用快捷登录时，选择 XIVLauncher 中已保存且启用了 OTP 的账号，输入 Base32 TOTP 密钥、`otpauth://` 地址，或点击「导入二维码」选择身份验证器导出的图片。Google Authenticator 导出多张二维码时可以一次全部选择。
+5. 导出内容包含多个 OTP 账号时，选择当前 XIVLauncher 账号对应的条目。
+6. 保存配置并生成快捷方式。
+7. 以后通过 `XIVLauncher - 配置名称.lnk` 启动。
 
 快捷登录需要在 XIVLauncher 中为账号启用 One-Time Password，并启用 `Enable XL Authenticator app/OTP macro support`。不需要永久打开 XIVLauncher 的自动登录。
 

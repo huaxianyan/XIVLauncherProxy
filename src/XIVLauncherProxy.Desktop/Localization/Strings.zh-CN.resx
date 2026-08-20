@@ -31,6 +31,8 @@
   <data name="LauncherPathMissing" xml:space="preserve"><value>请选择 XIVLauncher.exe。</value></data><data name="LauncherNotFound" xml:space="preserve"><value>所选位置中没有找到 XIVLauncher.exe。</value></data>
   <data name="LauncherFileInvalid" xml:space="preserve"><value>请选择 XIVLauncher.exe 程序文件。</value></data><data name="ProfilesConflict" xml:space="preserve"><value>启动配置内容发生冲突，请重新创建对应配置。</value></data>
   <data name="ProfileNameMissing" xml:space="preserve"><value>请填写启动配置名称。</value></data><data name="ProfileFeatureMissing" xml:space="preserve"><value>请启用代理、快捷登录或同时启用两者。</value></data>
+  <data name="ConfigureLauncherFirst" xml:space="preserve"><value>请先在基础设置中选择有效的 XIVLauncher.exe 路径。</value></data>
+  <data name="ConfigureProxyFirst" xml:space="preserve"><value>请先在基础设置中填写有效的代理地址，再为启动配置启用代理。</value></data>
   <data name="ProxyAddressInvalid" xml:space="preserve"><value>请输入有效的代理地址，例如 127.0.0.1:37777。</value></data><data name="ProfileAccountMissing" xml:space="preserve"><value>请选择用于快捷登录的 XIVLauncher 账号。</value></data>
   <data name="ProfileCredentialMissing" xml:space="preserve"><value>请先为这个账号保存 TOTP 密钥。</value></data><data name="ConfigurationReadFailed" xml:space="preserve"><value>无法读取设置，请检查软件配置目录。</value></data>
   <data name="ConfigurationSaveFailed" xml:space="preserve"><value>无法保存设置，请检查软件配置目录的访问权限。</value></data><data name="AccountsReadFailed" xml:space="preserve"><value>无法读取 XIVLauncher 账号，请先在 XIVLauncher 中保存账号后重试。</value></data>
@@ -42,6 +44,19 @@
   <data name="TotpSecretInvalidBase32" xml:space="preserve"><value>TOTP 密钥不是有效的 Base32 内容。</value></data><data name="TotpSecretTooShort" xml:space="preserve"><value>TOTP 密钥内容过短。</value></data>
   <data name="TotpUriInvalid" xml:space="preserve"><value>无法识别这个 otpauth:// 地址。</value></data><data name="TotpAlgorithmUnsupported" xml:space="preserve"><value>当前仅支持 SHA1 类型的 TOTP。</value></data>
   <data name="TotpDigitsUnsupported" xml:space="preserve"><value>XIVLauncher 登录只接受 6 位验证码。</value></data><data name="TotpPeriodUnsupported" xml:space="preserve"><value>当前仅支持 30 秒周期的 TOTP。</value></data>
+  <data name="ImportQr" xml:space="preserve"><value>导入二维码</value></data>
+  <data name="Import" xml:space="preserve"><value>导入</value></data>
+  <data name="SelectQrImages" xml:space="preserve"><value>选择身份验证器导出的二维码图片</value></data>
+  <data name="ImageFiles" xml:space="preserve"><value>图片文件</value></data>
+  <data name="SelectOtpEntry" xml:space="preserve"><value>选择 OTP 账号</value></data>
+  <data name="SelectOtpEntryHint" xml:space="preserve"><value>导出内容包含多个账号，请选择当前 XIVLauncher 启动配置要使用的账号。</value></data>
+  <data name="OtpImported" xml:space="preserve"><value>已导入 OTP 账号：{0}。请保存启动配置以保护密钥。</value></data>
+  <data name="QrCodeNotFound" xml:space="preserve"><value>所选图片中没有找到支持的 OTP 二维码。</value></data>
+  <data name="QrImageReadFailed" xml:space="preserve"><value>无法读取图片，请选择 PNG、JPEG、BMP、GIF 或 WebP 图片。</value></data>
+  <data name="OtpImportFormatUnsupported" xml:space="preserve"><value>二维码不是标准 OTP 或 Google Authenticator 导出格式。</value></data>
+  <data name="GoogleMigrationInvalid" xml:space="preserve"><value>Google Authenticator 导出数据无效或不完整。</value></data>
+  <data name="GoogleMigrationEmpty" xml:space="preserve"><value>Google Authenticator 导出内容中没有 OTP 账号。</value></data>
+  <data name="OtpTypeUnsupported" xml:space="preserve"><value>暂不支持 HOTP 账号，请选择 TOTP 账号。</value></data>
   <data name="ProfileNotFound" xml:space="preserve"><value>这个快捷方式对应的启动配置已不存在，请重新生成。</value></data>
   <data name="Confirm" xml:space="preserve"><value>确定</value></data><data name="Cancel" xml:space="preserve"><value>取消</value></data>
   <data name="UnexpectedError" xml:space="preserve"><value>操作未能完成，请检查设置后重试。</value></data><data name="WindowsOnly" xml:space="preserve"><value>当前版本暂时只支持 Windows。</value></data>

@@ -22,6 +22,29 @@ public static class Base32Secret
         return normalized;
     }
 
+    public static string Encode(ReadOnlySpan<byte> value)
+    {
+        if (value.IsEmpty)
+            throw new FormatException("TotpSecretMissing");
+        var output = new System.Text.StringBuilder((value.Length * 8 + 4) / 5);
+        int buffer = 0;
+        int bits = 0;
+        foreach (byte item in value)
+        {
+            buffer = (buffer << 8) | item;
+            bits += 8;
+            while (bits >= 5)
+            {
+                bits -= 5;
+                output.Append(Alphabet[(buffer >> bits) & 31]);
+                buffer &= (1 << bits) - 1;
+            }
+        }
+        if (bits > 0)
+            output.Append(Alphabet[(buffer << (5 - bits)) & 31]);
+        return output.ToString();
+    }
+
     public static byte[] Decode(string value)
     {
         var output = new List<byte>(value.Length * 5 / 8);

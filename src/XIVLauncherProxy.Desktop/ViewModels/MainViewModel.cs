@@ -3,10 +3,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using XIVLauncherProxy.Application.Abstractions;
 using XIVLauncherProxy.Application.Configuration;
+using XIVLauncherProxy.Application.Authentication;
 using XIVLauncherProxy.Application.Errors;
 using XIVLauncherProxy.Desktop.Localization;
 using XIVLauncherProxy.Desktop.Services;
 using XIVLauncherProxy.Domain.Accounts;
+using XIVLauncherProxy.Domain.Authentication;
 using XIVLauncherProxy.Domain.Configuration;
 
 namespace XIVLauncherProxy.Desktop.ViewModels;
@@ -18,6 +20,7 @@ public partial class MainViewModel : ObservableObject
     private readonly IProxyConnectionTester proxyTester;
     private readonly ProfileService profileService;
     private readonly ConfigurationValidator validator;
+    private readonly ImportOtpFromImagesUseCase otpImporter;
     private readonly IWindowService windows;
     private readonly ITextLocalizer text;
     private readonly AppConfiguration configuration;
@@ -34,12 +37,41 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private LaunchProfile? selectedProfile;
     [ObservableProperty] private AccountOption? selectedAccount;
     [ObservableProperty] private string profileName = string.Empty;
-    [ObservableProperty] private bool useProxy;
-    [ObservableProperty] private bool useQuickLogin;
+    private bool useProxy;
+    private bool useQuickLogin;
     [ObservableProperty] private string totpSecret = string.Empty;
     [ObservableProperty] private string credentialStatus = string.Empty;
     [ObservableProperty] private string statusMessage = string.Empty;
     [ObservableProperty] private bool isBusy;
+    private bool loadingProfile;
+
+    public bool UseProxy
+    {
+        get => useProxy;
+        set
+        {
+            if (value && !CanEnableFeature(requireProxy: true))
+            {
+                SetProperty(ref useProxy, false);
+                return;
+            }
+            SetProperty(ref useProxy, value);
+        }
+    }
+
+    public bool UseQuickLogin
+    {
+        get => useQuickLogin;
+        set
+        {
+            if (value && !CanEnableFeature(requireProxy: false))
+            {
+                SetProperty(ref useQuickLogin, false);
+                return;
+            }
+            SetProperty(ref useQuickLogin, value);
+        }
+    }
 
     public string PageTitle => text[IsGeneralPage ? "GeneralTitle" : "ProfilesTitle"];
     public string PageSubtitle => text[IsGeneralPage ? "GeneralSubtitle" : "ProfilesSubtitle"];
@@ -51,6 +83,7 @@ public partial class MainViewModel : ObservableObject
         IProxyConnectionTester proxyTester,
         ProfileService profileService,
         ConfigurationValidator validator,
+        ImportOtpFromImagesUseCase otpImporter,
         IWindowService windows,
         ITextLocalizer text,
         string? initialErrorCode = null)
@@ -60,6 +93,7 @@ public partial class MainViewModel : ObservableObject
         this.proxyTester = proxyTester;
         this.profileService = profileService;
         this.validator = validator;
+        this.otpImporter = otpImporter;
         this.windows = windows;
         this.text = text;
         configuration = settings.Load();
@@ -96,6 +130,28 @@ public partial class MainViewModel : ObservableObject
     {
         string? selected = await windows.PickLauncherAsync(LauncherPath);
         if (selected is not null) LauncherPath = selected;
+    }
+
+    [RelayCommand]
+    private async Task ImportQrAsync()
+    {
+        IReadOnlyList<string> paths = await windows.PickQrImagesAsync();
+        if (paths.Count == 0)
+            return;
+        IsBusy = true;
+        try
+        {
+            IReadOnlyList<OtpImportEntry> entries = otpImporter.Execute(paths);
+            OtpImportEntry? selected = entries.Count == 1
+                ? entries[0]
+                : await windows.SelectOtpEntryAsync(entries);
+            if (selected is null)
+                return;
+            TotpSecret = selected.Secret;
+            StatusMessage = text.Format("OtpImported", selected.DisplayName);
+        }
+        catch (Exception exception) { ShowError(exception); }
+        finally { IsBusy = false; }
     }
 
     [RelayCommand]
@@ -203,13 +259,36 @@ public partial class MainViewModel : ObservableObject
         });
     }
 
+    partial void OnLauncherPathChanged(string value)
+    {
+        try
+        {
+            validator.ValidateLauncherPath(value.Trim());
+        }
+        catch (Exception)
+        {
+            if (useProxy) { useProxy = false; OnPropertyChanged(nameof(UseProxy)); }
+            if (useQuickLogin) { useQuickLogin = false; OnPropertyChanged(nameof(UseQuickLogin)); }
+        }
+    }
+
+    partial void OnProxyAddressChanged(string value)
+    {
+        if (XIVLauncherProxy.Application.Configuration.ProxyAddress.TryParse(value, out _) || !useProxy)
+            return;
+        useProxy = false;
+        OnPropertyChanged(nameof(UseProxy));
+    }
+
     partial void OnSelectedProfileChanged(LaunchProfile? value)
     {
         OnPropertyChanged(nameof(HasSelectedProfile));
         if (value is null) return;
+        loadingProfile = true;
         ProfileName = value.Name;
         UseProxy = value.UseProxy;
         UseQuickLogin = value.UseQuickLogin;
+        loadingProfile = false;
         SelectedAccount = Accounts.FirstOrDefault(x => x.Account.AccountId == value.XivLauncherAccountId);
         TotpSecret = string.Empty;
         CredentialStatus = profileService.HasCredential(value)
@@ -264,6 +343,29 @@ public partial class MainViewModel : ObservableObject
             SelectedProfile.UserName = SelectedAccount.Account.UserName;
             SelectedProfile.XivLauncherAccountId = SelectedAccount.Account.AccountId;
         }
+    }
+
+    private bool CanEnableFeature(bool requireProxy)
+    {
+        try
+        {
+            validator.ValidateLauncherPath(LauncherPath.Trim());
+        }
+        catch (Exception)
+        {
+            if (!loadingProfile)
+                StatusMessage = text["ConfigureLauncherFirst"];
+            return false;
+        }
+
+        if (requireProxy
+            && !XIVLauncherProxy.Application.Configuration.ProxyAddress.TryParse(ProxyAddress, out _))
+        {
+            if (!loadingProfile)
+                StatusMessage = text["ConfigureProxyFirst"];
+            return false;
+        }
+        return true;
     }
 
     private string BuildSummary() => text.Format("StatusSummary",

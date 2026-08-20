@@ -16,6 +16,18 @@ public sealed class TotpGeneratorTests
     }
 
     [Fact]
+    public void GoogleAuthenticatorMigrationExportImportsItsAccount()
+    {
+        const string migration = "otpauth-migration://offline?data=CjEKCkhlbGxvId6tvu8SGEV4YW1wbGU6YWxpY2VAZ29vZ2xlLmNvbRoHRXhhbXBsZTAC";
+
+        OtpImportEntry entry = Assert.Single(OtpImportParser.Parse(migration));
+
+        Assert.Equal("JBSWY3DPEHPK3PXP", entry.Secret);
+        Assert.Equal("Example:alice@google.com", entry.Name);
+        Assert.Equal("Example", entry.Issuer);
+    }
+
+    [Fact]
     public void StandardOtpAuthUriImportsItsBase32Secret()
     {
         const string secret = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ";

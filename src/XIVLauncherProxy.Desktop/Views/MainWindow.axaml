@@ -102,9 +102,10 @@
                   <Button Grid.Column="1" Content="{l10n:Tr RefreshAccounts}" Command="{Binding ReloadAccountsCommand}"/>
                 </Grid>
                 <TextBlock Text="{l10n:Tr TotpSecret}" FontWeight="SemiBold" Margin="0,6,0,0"/>
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
                   <TextBox Text="{Binding TotpSecret}" PasswordChar="●" IsEnabled="{Binding UseQuickLogin}" PlaceholderText="{l10n:Tr TotpHint}"/>
-                  <Button Grid.Column="1" Content="{l10n:Tr ClearSecret}" Command="{Binding ClearSecretCommand}"/>
+                  <Button Grid.Column="1" Content="{l10n:Tr ImportQr}" Command="{Binding ImportQrCommand}" IsEnabled="{Binding UseQuickLogin}"/>
+                  <Button Grid.Column="2" Content="{l10n:Tr ClearSecret}" Command="{Binding ClearSecretCommand}"/>
                 </Grid>
                 <TextBlock Text="{Binding CredentialStatus}" Classes="hint" TextWrapping="Wrap"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,10,0,0">
