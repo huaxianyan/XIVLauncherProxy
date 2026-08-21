@@ -1,6 +1,7 @@
 using Avalonia;
 using XIVLauncherProxy.Application.Errors;
 using XIVLauncherProxy.Domain.Configuration;
+using XIVLauncherProxy.Platform.Windows.Updates;
 
 namespace XIVLauncherProxy.Desktop;
 
@@ -9,6 +10,15 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        if (OperatingSystem.IsWindows()
+            && WindowsSelfUpdate.TryRunUpdater(args, out int updaterExitCode))
+        {
+            Environment.ExitCode = updaterExitCode;
+            return;
+        }
+        if (OperatingSystem.IsWindows())
+            args = WindowsSelfUpdate.ScheduleCleanupAndRemoveArguments(args);
+
         try
         {
             StartupState.Composition = ApplicationComposition.Create();

@@ -3,6 +3,7 @@ using XIVLauncherProxy.Application.Authentication;
 using XIVLauncherProxy.Application.Configuration;
 using XIVLauncherProxy.Application.Launching;
 using XIVLauncherProxy.Application.Errors;
+using XIVLauncherProxy.Application.Updates;
 using XIVLauncherProxy.Desktop.Localization;
 using XIVLauncherProxy.Desktop.Services;
 using XIVLauncherProxy.Desktop.ViewModels;
@@ -10,6 +11,7 @@ using XIVLauncherProxy.Infrastructure.Accounts;
 using XIVLauncherProxy.Infrastructure.Authentication;
 using XIVLauncherProxy.Infrastructure.Configuration;
 using XIVLauncherProxy.Infrastructure.Networking;
+using XIVLauncherProxy.Infrastructure.Updates;
 using XIVLauncherProxy.Platform.Windows;
 using XIVLauncherProxy.Platform.Windows.Launching;
 using XIVLauncherProxy.Platform.Windows.Security;
@@ -27,6 +29,8 @@ public sealed class ApplicationComposition
     private readonly ProfileService profiles;
     private readonly ConfigurationValidator validator;
     private readonly ImportOtpFromImagesUseCase otpImporter;
+    private readonly IApplicationUpdateService updateService;
+    private readonly IApplicationUpdateProxy updateProxy;
 
     private ApplicationComposition(
         IConfigurationStore settings,
@@ -35,6 +39,8 @@ public sealed class ApplicationComposition
         ProfileService profiles,
         ConfigurationValidator validator,
         ImportOtpFromImagesUseCase otpImporter,
+        IApplicationUpdateService updateService,
+        IApplicationUpdateProxy updateProxy,
         LaunchProfileUseCase launchProfile)
     {
         Settings = settings;
@@ -43,6 +49,8 @@ public sealed class ApplicationComposition
         this.profiles = profiles;
         this.validator = validator;
         this.otpImporter = otpImporter;
+        this.updateService = updateService;
+        this.updateProxy = updateProxy;
         LaunchProfile = launchProfile;
     }
 
@@ -65,6 +73,19 @@ public sealed class ApplicationComposition
             new WindowsLauncherProcess(),
             new WindowsAutologinSessionFactory(WindowsPaths.LauncherSettingsPath),
             otp);
+        var updateProxy = new ConfigurableApplicationUpdateProxy();
+        var updateClient = new HttpClient(new SocketsHttpHandler
+        {
+            Proxy = updateProxy,
+            UseProxy = true,
+        })
+        {
+            Timeout = TimeSpan.FromMinutes(15),
+        };
+        Version currentVersion = typeof(ApplicationComposition).Assembly.GetName().Version
+            ?? new Version(0, 0, 0);
+        var updateService = new GitHubApplicationUpdateService(
+            updateClient, currentVersion, WindowsPaths.UpdatesDirectory);
         return new ApplicationComposition(
             settings,
             new JsonXivLauncherAccountSource(WindowsPaths.AccountListPath),
@@ -72,10 +93,16 @@ public sealed class ApplicationComposition
             profiles,
             validator,
             new ImportOtpFromImagesUseCase(new ImageSharpQrCodeDecoder()),
+            updateService,
+            updateProxy,
             launch);
     }
 
-    public MainViewModel CreateMainViewModel(IWindowService windows, string? initialErrorCode) =>
-        new(Settings, accounts, proxyTester, profiles, validator, otpImporter, windows,
+    public MainViewModel CreateMainViewModel(
+        IWindowService windows,
+        IApplicationUpdateInstaller updateInstaller,
+        string? initialErrorCode) =>
+        new(Settings, accounts, proxyTester, profiles, validator, otpImporter,
+            updateService, updateProxy, updateInstaller, windows,
             ResourceTextLocalizer.Instance, initialErrorCode);
 }

@@ -11,8 +11,29 @@
   <data name="Launcher" xml:space="preserve"><value>XIVLauncher</value></data><data name="LauncherHint" xml:space="preserve"><value>所有启动配置共用这个程序路径。</value></data>
   <data name="LauncherPath" xml:space="preserve"><value>程序路径</value></data><data name="Browse" xml:space="preserve"><value>浏览</value></data>
   <data name="ProxySettings" xml:space="preserve"><value>代理设置</value></data><data name="ProxyHint" xml:space="preserve"><value>仅应用到启用了代理的启动配置，不修改系统代理。</value></data>
-  <data name="ProxyAddress" xml:space="preserve"><value>本地代理地址</value></data><data name="TestConnection" xml:space="preserve"><value>测试连接</value></data>
+  <data name="ProxyProtocol" xml:space="preserve"><value>协议</value></data><data name="ProxyHost" xml:space="preserve"><value>地址</value></data><data name="ProxyPort" xml:space="preserve"><value>端口</value></data><data name="TestConnection" xml:space="preserve"><value>测试连接</value></data>
   <data name="SetAllProxy" xml:space="preserve"><value>同时设置 ALL_PROXY</value></data><data name="BypassLocal" xml:space="preserve"><value>本地地址直接连接</value></data>
+  <data name="UseProxyForUpdates" xml:space="preserve"><value>软件更新使用此代理</value></data>
+  <data name="SoftwareUpdate" xml:space="preserve"><value>软件更新</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>当前版本：{0}</value></data>
+  <data name="UpdateNotChecked" xml:space="preserve"><value>尚未检查更新。</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>检查更新</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>正在检查更新……</value></data>
+  <data name="AlreadyLatestVersion" xml:space="preserve"><value>当前已是最新版本。</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>发现新版本 {0}。</value></data>
+  <data name="DownloadAndInstall" xml:space="preserve"><value>下载并安装</value></data>
+  <data name="DownloadingUpdate" xml:space="preserve"><value>正在下载版本 {0}……</value></data>
+  <data name="WaitingForUpdate" xml:space="preserve"><value>正在等待版本 {0} 的下载数据……</value></data>
+  <data name="DownloadingUpdateUnknownSize" xml:space="preserve"><value>正在下载版本 {0}：已接收 {1}</value></data>
+  <data name="DownloadingUpdateProgress" xml:space="preserve"><value>正在下载版本 {0}：{1} / {2}（{3}%）</value></data>
+  <data name="DownloadKilobytes" xml:space="preserve"><value>{0:F1} KB</value></data>
+  <data name="DownloadMegabytes" xml:space="preserve"><value>{0:F1} MB</value></data>
+  <data name="ApplyingUpdate" xml:space="preserve"><value>下载和校验已完成，应用即将关闭并自动重启。</value></data>
+  <data name="UpdateCheckCanceled" xml:space="preserve"><value>已取消检查更新。</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>无法检查更新，请检查网络和更新代理设置后重试。</value></data>
+  <data name="UpdateCanceled" xml:space="preserve"><value>已取消下载，当前版本保持不变。</value></data>
+  <data name="UpdateFailed" xml:space="preserve"><value>更新未能完成，当前版本保持不变。请检查网络和安装目录权限后重试。</value></data>
+  <data name="AutomaticUpdatePublishedOnly" xml:space="preserve"><value>自动安装仅支持 Windows 单文件正式版；当前开发版本只能检查更新。</value></data>
   <data name="SaveGeneral" xml:space="preserve"><value>保存设置</value></data><data name="ProfileListHint" xml:space="preserve"><value>每项对应一个独立快捷方式。</value></data>
   <data name="Add" xml:space="preserve"><value>新建</value></data><data name="Delete" xml:space="preserve"><value>删除</value></data>
   <data name="ProfileName" xml:space="preserve"><value>配置名称</value></data><data name="UseProxy" xml:space="preserve"><value>使用代理</value></data>

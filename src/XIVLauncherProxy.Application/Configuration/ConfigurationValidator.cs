@@ -51,11 +51,46 @@ public sealed class ConfigurationValidator(
 
 public static class ProxyAddress
 {
+    public static IReadOnlyList<string> SupportedSchemes { get; } =
+        Array.AsReadOnly(["http://", "https://", "socks4://", "socks5://"]);
+
+    public static bool TryCreate(string scheme, string host, string port, out Uri? uri)
+    {
+        uri = null;
+        if (!SupportedSchemes.Contains(scheme, StringComparer.OrdinalIgnoreCase)
+            || string.IsNullOrWhiteSpace(host)
+            || !int.TryParse(port, out int portNumber)
+            || portNumber is < 1 or > 65535)
+            return false;
+        try
+        {
+            var builder = new UriBuilder(scheme[..^3], host.Trim(), portNumber);
+            return TryParse(builder.Uri.GetLeftPart(UriPartial.Authority), out uri);
+        }
+        catch (UriFormatException)
+        {
+            return false;
+        }
+    }
+
+    public static bool TrySplit(string value, out string scheme, out string host, out string port)
+    {
+        scheme = SupportedSchemes[0];
+        host = string.Empty;
+        port = string.Empty;
+        if (!TryParse(value, out Uri? uri))
+            return false;
+        scheme = $"{uri!.Scheme}://";
+        host = uri.Host;
+        port = uri.Port.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        return true;
+    }
+
     public static bool TryParse(string value, out Uri? uri)
     {
         uri = null;
         if (!Uri.TryCreate(value.Trim(), UriKind.Absolute, out Uri? parsed)
-            || parsed.Scheme is not ("http" or "https" or "socks4" or "socks5")
+            || !SupportedSchemes.Contains($"{parsed.Scheme}://", StringComparer.OrdinalIgnoreCase)
             || string.IsNullOrWhiteSpace(parsed.Host)
             || parsed.Port is < 1 or > 65535)
             return false;

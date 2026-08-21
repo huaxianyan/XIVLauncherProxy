@@ -81,6 +81,16 @@ DPAPI 的安全边界是当前 Windows 用户，而不是独立的密码保险�
 
 启用代理的配置会为 XIVLauncher 及其子进程设置 `HTTP_PROXY`、`HTTPS_PROXY`，以及可选的 `ALL_PROXY` 和 `NO_PROXY`。不会修改用户或系统的全局代理。本地 OTP 请求始终直接连接 `127.0.0.1`。
 
+基础设置中的「软件更新使用此代理」只影响检查和下载更新。关闭后软件更新使用直接连接，不改变启动配置的代理行为。
+
+## 软件更新
+
+配置程序启动时会检查 GitHub 最新正式 Release，也可以在「基础设置」中手动检查。发现新版本后，可以直接下载并安装。
+
+更新只接受 Release 中名称固定的 `XIVLauncherProxy.exe` 和 `XIVLauncherProxy.exe.sha256`。下载期间显示进度，完成后校验 SHA-256，再由临时更新进程替换当前程序并自动重启。替换失败或新版本未能持续启动时会恢复原版本。
+
+自动安装支持 Windows 自包含单文件正式版，目标位置是当前运行的 `XIVLauncherProxy.exe`，因此可以在任意具有写入权限的目录中原地更新。开发构建仍可检查更新，但不会自动替换程序。更新暂存文件位于 `%LocalAppData%\XIVLauncherProxy\updates`，成功重启后会自动清理。
+
 ## 架构与平台
 
 项目使用 .NET 10、Avalonia UI、MVVM 和模块化单体：

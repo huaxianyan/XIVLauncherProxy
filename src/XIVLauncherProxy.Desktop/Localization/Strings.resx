@@ -18,10 +18,33 @@
   <data name="Browse" xml:space="preserve"><value>Browse</value></data>
   <data name="ProxySettings" xml:space="preserve"><value>Proxy settings</value></data>
   <data name="ProxyHint" xml:space="preserve"><value>Applied only to profiles with proxy enabled. System proxy settings are unchanged.</value></data>
-  <data name="ProxyAddress" xml:space="preserve"><value>Local proxy address</value></data>
+  <data name="ProxyProtocol" xml:space="preserve"><value>Protocol</value></data>
+  <data name="ProxyHost" xml:space="preserve"><value>Address</value></data>
+  <data name="ProxyPort" xml:space="preserve"><value>Port</value></data>
   <data name="TestConnection" xml:space="preserve"><value>Test connection</value></data>
   <data name="SetAllProxy" xml:space="preserve"><value>Also set ALL_PROXY</value></data>
   <data name="BypassLocal" xml:space="preserve"><value>Connect to local addresses directly</value></data>
+  <data name="UseProxyForUpdates" xml:space="preserve"><value>Use this proxy for software updates</value></data>
+  <data name="SoftwareUpdate" xml:space="preserve"><value>Software update</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>Current version: {0}</value></data>
+  <data name="UpdateNotChecked" xml:space="preserve"><value>Updates have not been checked.</value></data>
+  <data name="CheckForUpdates" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="CheckingForUpdates" xml:space="preserve"><value>Checking for updates…</value></data>
+  <data name="AlreadyLatestVersion" xml:space="preserve"><value>This is the latest version.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>Version {0} is available.</value></data>
+  <data name="DownloadAndInstall" xml:space="preserve"><value>Download and install</value></data>
+  <data name="DownloadingUpdate" xml:space="preserve"><value>Downloading version {0}…</value></data>
+  <data name="WaitingForUpdate" xml:space="preserve"><value>Waiting for version {0} download data…</value></data>
+  <data name="DownloadingUpdateUnknownSize" xml:space="preserve"><value>Downloading version {0}: {1} received</value></data>
+  <data name="DownloadingUpdateProgress" xml:space="preserve"><value>Downloading version {0}: {1} / {2} ({3}%)</value></data>
+  <data name="DownloadKilobytes" xml:space="preserve"><value>{0:F1} KB</value></data>
+  <data name="DownloadMegabytes" xml:space="preserve"><value>{0:F1} MB</value></data>
+  <data name="ApplyingUpdate" xml:space="preserve"><value>The download is verified. The application will close, update, and restart.</value></data>
+  <data name="UpdateCheckCanceled" xml:space="preserve"><value>The update check was canceled.</value></data>
+  <data name="UpdateCheckFailed" xml:space="preserve"><value>Updates could not be checked. Review the network and update proxy settings, then try again.</value></data>
+  <data name="UpdateCanceled" xml:space="preserve"><value>The download was canceled. The current version remains installed.</value></data>
+  <data name="UpdateFailed" xml:space="preserve"><value>The update could not be completed. The current version remains installed. Check the network and installation folder permissions, then try again.</value></data>
+  <data name="AutomaticUpdatePublishedOnly" xml:space="preserve"><value>Automatic installation requires the Windows single-file release. This development build can only check for updates.</value></data>
   <data name="SaveGeneral" xml:space="preserve"><value>Save settings</value></data>
   <data name="ProfileListHint" xml:space="preserve"><value>Each profile creates an independent shortcut.</value></data>
   <data name="Add" xml:space="preserve"><value>Add</value></data>

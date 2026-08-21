@@ -56,15 +56,35 @@
               <StackPanel Spacing="13">
                 <TextBlock Text="{l10n:Tr ProxySettings}" Classes="section"/>
                 <TextBlock Text="{l10n:Tr ProxyHint}" Classes="hint"/>
-                <TextBlock Text="{l10n:Tr ProxyAddress}" FontWeight="SemiBold"/>
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                  <TextBox Text="{Binding ProxyAddress}" PlaceholderText="http://127.0.0.1:37777"/>
-                  <Button Grid.Column="1" Content="{l10n:Tr TestConnection}" Command="{Binding TestProxyCommand}"/>
+                <Grid ColumnDefinitions="130,*,120,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto" RowSpacing="6">
+                  <TextBlock Text="{l10n:Tr ProxyProtocol}" FontWeight="SemiBold"/>
+                  <TextBlock Grid.Column="1" Text="{l10n:Tr ProxyHost}" FontWeight="SemiBold"/>
+                  <TextBlock Grid.Column="2" Text="{l10n:Tr ProxyPort}" FontWeight="SemiBold"/>
+                  <ComboBox Grid.Row="1" ItemsSource="{Binding ProxySchemes}" SelectedItem="{Binding SelectedProxyScheme}"/>
+                  <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProxyHost}" PlaceholderText="127.0.0.1"/>
+                  <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ProxyPort}" PlaceholderText="37777" MaxLength="5"/>
+                  <Button Grid.Row="1" Grid.Column="3" Content="{l10n:Tr TestConnection}" Command="{Binding TestProxyCommand}"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" Spacing="24">
                   <CheckBox Content="{l10n:Tr SetAllProxy}" IsChecked="{Binding SetAllProxy}"/>
                   <CheckBox Content="{l10n:Tr BypassLocal}" IsChecked="{Binding BypassLocalAddresses}"/>
+                  <CheckBox Content="{l10n:Tr UseProxyForUpdates}" IsChecked="{Binding UseProxyForUpdates}"/>
                 </StackPanel>
+              </StackPanel>
+            </Border>
+            <Border Classes="card">
+              <StackPanel Spacing="12">
+                <TextBlock Text="{l10n:Tr SoftwareUpdate}" Classes="section"/>
+                <TextBlock Text="{Binding CurrentVersion}" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding UpdateStatus}" Classes="hint" TextWrapping="Wrap"/>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <Button Content="{l10n:Tr CheckForUpdates}" Command="{Binding CheckForUpdatesCommand}"/>
+                  <Button Classes="primary" Content="{l10n:Tr DownloadAndInstall}" Command="{Binding InstallUpdateCommand}" IsVisible="{Binding IsUpdateAvailable}"/>
+                  <ProgressBar Width="180" Minimum="0" Maximum="100" IsVisible="{Binding IsUpdateBusy}"
+                               IsIndeterminate="{Binding IsUpdateProgressIndeterminate}" Value="{Binding UpdateProgressValue}"/>
+                </StackPanel>
+                <TextBlock Text="{l10n:Tr AutomaticUpdatePublishedOnly}" Classes="hint" TextWrapping="Wrap"
+                           IsVisible="{Binding !IsAutomaticUpdateSupported}"/>
               </StackPanel>
             </Border>
             <Button Classes="primary" HorizontalAlignment="Right" Content="{l10n:Tr SaveGeneral}" Command="{Binding SaveGeneralCommand}"/>

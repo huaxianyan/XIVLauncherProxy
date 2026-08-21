@@ -5,6 +5,7 @@ using XIVLauncherProxy.Application.Abstractions;
 using XIVLauncherProxy.Application.Configuration;
 using XIVLauncherProxy.Application.Authentication;
 using XIVLauncherProxy.Application.Errors;
+using XIVLauncherProxy.Application.Updates;
 using XIVLauncherProxy.Desktop.Localization;
 using XIVLauncherProxy.Desktop.Services;
 using XIVLauncherProxy.Domain.Accounts;
@@ -21,18 +22,25 @@ public partial class MainViewModel : ObservableObject
     private readonly ProfileService profileService;
     private readonly ConfigurationValidator validator;
     private readonly ImportOtpFromImagesUseCase otpImporter;
+    private readonly IApplicationUpdateService updateService;
+    private readonly IApplicationUpdateProxy updateProxy;
+    private readonly IApplicationUpdateInstaller updateInstaller;
     private readonly IWindowService windows;
     private readonly ITextLocalizer text;
     private readonly AppConfiguration configuration;
 
     public ObservableCollection<LaunchProfile> Profiles { get; } = [];
     public ObservableCollection<AccountOption> Accounts { get; } = [];
+    public IReadOnlyList<string> ProxySchemes => ProxyAddress.SupportedSchemes;
 
     [ObservableProperty] private bool isGeneralPage = true;
     [ObservableProperty] private bool isProfilesPage;
     [ObservableProperty] private string launcherPath = string.Empty;
-    [ObservableProperty] private string proxyAddress = string.Empty;
+    [ObservableProperty] private string selectedProxyScheme = ProxyAddress.SupportedSchemes[0];
+    [ObservableProperty] private string proxyHost = string.Empty;
+    [ObservableProperty] private string proxyPort = string.Empty;
     [ObservableProperty] private bool setAllProxy;
+    [ObservableProperty] private bool useProxyForUpdates;
     [ObservableProperty] private bool bypassLocalAddresses;
     [ObservableProperty] private LaunchProfile? selectedProfile;
     [ObservableProperty] private AccountOption? selectedAccount;
@@ -43,6 +51,17 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string credentialStatus = string.Empty;
     [ObservableProperty] private string statusMessage = string.Empty;
     [ObservableProperty] private bool isBusy;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CheckForUpdatesCommand))]
+    [NotifyCanExecuteChangedFor(nameof(InstallUpdateCommand))]
+    private bool isUpdateBusy;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(InstallUpdateCommand))]
+    private bool isUpdateAvailable;
+    [ObservableProperty] private bool isUpdateProgressIndeterminate = true;
+    [ObservableProperty] private double updateProgressValue;
+    [ObservableProperty] private string updateStatus = string.Empty;
+    private ApplicationRelease? availableRelease;
     private bool loadingProfile;
 
     public bool UseProxy
@@ -73,6 +92,9 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
+    public string CurrentVersion => text.Format(
+        "CurrentVersion", typeof(MainViewModel).Assembly.GetName().Version?.ToString(3) ?? "—");
+    public bool IsAutomaticUpdateSupported => updateInstaller.IsSupported;
     public string PageTitle => text[IsGeneralPage ? "GeneralTitle" : "ProfilesTitle"];
     public string PageSubtitle => text[IsGeneralPage ? "GeneralSubtitle" : "ProfilesSubtitle"];
     public bool HasSelectedProfile => SelectedProfile is not null;
@@ -84,6 +106,9 @@ public partial class MainViewModel : ObservableObject
         ProfileService profileService,
         ConfigurationValidator validator,
         ImportOtpFromImagesUseCase otpImporter,
+        IApplicationUpdateService updateService,
+        IApplicationUpdateProxy updateProxy,
+        IApplicationUpdateInstaller updateInstaller,
         IWindowService windows,
         ITextLocalizer text,
         string? initialErrorCode = null)
@@ -94,13 +119,26 @@ public partial class MainViewModel : ObservableObject
         this.profileService = profileService;
         this.validator = validator;
         this.otpImporter = otpImporter;
+        this.updateService = updateService;
+        this.updateProxy = updateProxy;
+        this.updateInstaller = updateInstaller;
         this.windows = windows;
         this.text = text;
         configuration = settings.Load();
         LauncherPath = configuration.LauncherPath;
-        ProxyAddress = configuration.ProxyUrl;
+        if (ProxyAddress.TrySplit(configuration.ProxyUrl, out string scheme, out string host, out string port))
+        {
+            SelectedProxyScheme = scheme;
+            ProxyHost = host;
+            ProxyPort = port;
+        }
         SetAllProxy = configuration.SetAllProxy;
+        UseProxyForUpdates = configuration.UseProxyForUpdates;
         BypassLocalAddresses = configuration.BypassLocalAddresses;
+        updateProxy.Configure(UseProxyForUpdates && TryGetProxy(out Uri? updateProxyUri)
+            ? updateProxyUri
+            : null);
+        UpdateStatus = text["UpdateNotChecked"];
         EnsureDefaultProfile();
         RefreshProfileCollection();
         RefreshAccounts(showStatus: false);
@@ -169,7 +207,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task TestProxyAsync()
     {
-        if (!XIVLauncherProxy.Application.Configuration.ProxyAddress.TryParse(ProxyAddress, out Uri? uri))
+        if (!TryGetProxy(out Uri? uri))
         {
             StatusMessage = text["ProxyAddressInvalid"];
             return;
@@ -182,6 +220,71 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception exception) { ShowError(exception); }
         finally { IsBusy = false; }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCheckForUpdates))]
+    public async Task CheckForUpdatesAsync(CancellationToken cancellationToken = default)
+    {
+        IsUpdateBusy = true;
+        IsUpdateProgressIndeterminate = true;
+        UpdateProgressValue = 0;
+        UpdateStatus = text["CheckingForUpdates"];
+        try
+        {
+            ApplicationUpdateStatus status = await updateService.CheckAsync(cancellationToken);
+            availableRelease = status.IsUpdateAvailable ? status.LatestRelease : null;
+            IsUpdateAvailable = availableRelease is not null;
+            UpdateStatus = availableRelease is null
+                ? text["AlreadyLatestVersion"]
+                : text.Format("UpdateAvailable", availableRelease.Version.ToString(3));
+        }
+        catch (OperationCanceledException)
+        {
+            UpdateStatus = text["UpdateCheckCanceled"];
+        }
+        catch (Exception)
+        {
+            availableRelease = null;
+            IsUpdateAvailable = false;
+            UpdateStatus = text["UpdateCheckFailed"];
+        }
+        finally
+        {
+            IsUpdateBusy = false;
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanInstallUpdate))]
+    private async Task InstallUpdateAsync(CancellationToken cancellationToken)
+    {
+        if (availableRelease is null)
+            return;
+        IsUpdateBusy = true;
+        IsUpdateProgressIndeterminate = true;
+        UpdateProgressValue = 0;
+        string version = availableRelease.Version.ToString(3);
+        UpdateStatus = text.Format("DownloadingUpdate", version);
+        var progress = new Progress<ApplicationUpdateProgress>(value =>
+            ReportUpdateProgress(value, version));
+        try
+        {
+            PreparedApplicationUpdate prepared = await updateService.PrepareAsync(
+                availableRelease, progress, cancellationToken);
+            UpdateStatus = text["ApplyingUpdate"];
+            updateInstaller.Launch(prepared);
+        }
+        catch (OperationCanceledException)
+        {
+            UpdateStatus = text["UpdateCanceled"];
+        }
+        catch (Exception)
+        {
+            UpdateStatus = text["UpdateFailed"];
+        }
+        finally
+        {
+            IsUpdateBusy = false;
+        }
     }
 
     [RelayCommand]
@@ -272,13 +375,9 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    partial void OnProxyAddressChanged(string value)
-    {
-        if (XIVLauncherProxy.Application.Configuration.ProxyAddress.TryParse(value, out _) || !useProxy)
-            return;
-        useProxy = false;
-        OnPropertyChanged(nameof(UseProxy));
-    }
+    partial void OnSelectedProxySchemeChanged(string value) => DisableProxyWhenInvalid();
+    partial void OnProxyHostChanged(string value) => DisableProxyWhenInvalid();
+    partial void OnProxyPortChanged(string value) => DisableProxyWhenInvalid();
 
     partial void OnSelectedProfileChanged(LaunchProfile? value)
     {
@@ -327,9 +426,14 @@ public partial class MainViewModel : ObservableObject
     private void ApplyGeneralSettings()
     {
         configuration.LauncherPath = LauncherPath.Trim();
-        configuration.ProxyUrl = ProxyAddress.Trim();
+        configuration.ProxyUrl = BuildProxyUrl();
         configuration.SetAllProxy = SetAllProxy;
+        configuration.UseProxyForUpdates = UseProxyForUpdates;
         configuration.BypassLocalAddresses = BypassLocalAddresses;
+        Uri? updateUri = null;
+        if (UseProxyForUpdates && !TryGetProxy(out updateUri))
+            throw new ProxyException("ProxyAddressInvalid");
+        updateProxy.Configure(updateUri);
     }
 
     private void ApplyProfileEditor()
@@ -358,14 +462,74 @@ public partial class MainViewModel : ObservableObject
             return false;
         }
 
-        if (requireProxy
-            && !XIVLauncherProxy.Application.Configuration.ProxyAddress.TryParse(ProxyAddress, out _))
+        if (requireProxy && !TryGetProxy(out _))
         {
             if (!loadingProfile)
                 StatusMessage = text["ConfigureProxyFirst"];
             return false;
         }
         return true;
+    }
+
+    private void ReportUpdateProgress(ApplicationUpdateProgress progress, string version)
+    {
+        if (progress.BytesReceived == 0)
+        {
+            IsUpdateProgressIndeterminate = true;
+            UpdateStatus = text.Format("WaitingForUpdate", version);
+            return;
+        }
+        string received = FormatDownloadSize(progress.BytesReceived);
+        if (progress.TotalBytes is not > 0)
+        {
+            IsUpdateProgressIndeterminate = true;
+            UpdateStatus = text.Format("DownloadingUpdateUnknownSize", version, received);
+            return;
+        }
+        double percentage = Math.Clamp(
+            progress.BytesReceived * 100d / progress.TotalBytes.Value, 0, 100);
+        IsUpdateProgressIndeterminate = false;
+        UpdateProgressValue = percentage;
+        UpdateStatus = text.Format(
+            "DownloadingUpdateProgress",
+            version,
+            received,
+            FormatDownloadSize(progress.TotalBytes.Value),
+            Math.Round(percentage));
+    }
+
+    private string FormatDownloadSize(long bytes) => bytes < 1_000_000
+        ? text.Format("DownloadKilobytes", bytes / 1_000d)
+        : text.Format("DownloadMegabytes", bytes / 1_000_000d);
+
+    private bool CanCheckForUpdates() => !IsUpdateBusy;
+
+    private bool CanInstallUpdate() =>
+        !IsUpdateBusy && IsUpdateAvailable && updateInstaller.IsSupported;
+
+    private bool TryGetProxy(out Uri? uri) =>
+        ProxyAddress.TryCreate(SelectedProxyScheme, ProxyHost, ProxyPort, out uri);
+
+    private string BuildProxyUrl()
+    {
+        if (string.IsNullOrWhiteSpace(ProxyHost) && string.IsNullOrWhiteSpace(ProxyPort))
+            return string.Empty;
+        if (!TryGetProxy(out Uri? uri))
+            throw new ProxyException("ProxyAddressInvalid");
+        return uri!.GetLeftPart(UriPartial.Authority);
+    }
+
+    private void DisableProxyWhenInvalid()
+    {
+        if (TryGetProxy(out _))
+            return;
+        if (useProxy)
+        {
+            useProxy = false;
+            OnPropertyChanged(nameof(UseProxy));
+        }
+        if (UseProxyForUpdates)
+            UseProxyForUpdates = false;
     }
 
     private string BuildSummary() => text.Format("StatusSummary",

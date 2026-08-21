@@ -7,6 +7,7 @@ public static class WindowsPaths
         "XIVLauncherProxy");
     public static string ConfigurationPath => Path.Combine(AppDataDirectory, "config.json");
     public static string CredentialPath => Path.Combine(AppDataDirectory, "totp-credentials.json");
+    public static string UpdatesDirectory => Path.Combine(AppDataDirectory, "updates");
     public static string DefaultLauncherPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "XIVLauncher", "XIVLauncher.exe");

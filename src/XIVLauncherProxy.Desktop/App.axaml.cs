@@ -18,11 +18,12 @@ public partial class App : Avalonia.Application
             ApplicationComposition composition = StartupState.Composition
                 ?? ApplicationComposition.Create();
             var windowService = new AvaloniaWindowService(() => window);
-            window = new MainWindow
-            {
-                DataContext = composition.CreateMainViewModel(windowService, StartupState.ErrorCode),
-            };
+            var updateInstaller = new WindowsApplicationUpdateInstaller(desktop);
+            var viewModel = composition.CreateMainViewModel(
+                windowService, updateInstaller, StartupState.ErrorCode);
+            window = new MainWindow { DataContext = viewModel };
             desktop.MainWindow = window;
+            _ = viewModel.CheckForUpdatesAsync();
         }
         base.OnFrameworkInitializationCompleted();
     }

@@ -70,6 +70,16 @@ Clearing a secret removes its current encrypted record. Backups or filesystem sn
 
 Proxy-enabled profiles set `HTTP_PROXY`, `HTTPS_PROXY`, and optionally `ALL_PROXY` and `NO_PROXY` for XIVLauncher and its child processes. User and system proxy settings are not changed. Local OTP submission always connects directly to `127.0.0.1`.
 
+**Use this proxy for software updates** affects only update checks and downloads. When disabled, updates use a direct connection without changing launch-profile proxy behavior.
+
+## Software updates
+
+The configuration application checks the latest stable GitHub Release at startup, and updates can also be checked manually from **General settings**. When a newer version is available, it can be downloaded and installed directly.
+
+Only `XIVLauncherProxy.exe` and `XIVLauncherProxy.exe.sha256` from the Release are accepted. Download progress is displayed, the SHA-256 digest is verified, and a temporary updater replaces the current executable before restarting the application. A failed replacement or failed startup restores the previous version.
+
+Automatic installation supports the self-contained Windows single-file release. The currently running `XIVLauncherProxy.exe` is updated in place, so any writable installation directory is supported. Development builds can check for updates but cannot replace themselves. Staged files are stored under `%LocalAppData%\XIVLauncherProxy\updates` and removed after a successful restart.
+
 ## Architecture and platform scope
 
 The project uses .NET 10, Avalonia UI, MVVM, and a modular monolith structure:
