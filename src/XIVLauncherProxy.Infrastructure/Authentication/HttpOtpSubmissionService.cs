@@ -13,14 +13,14 @@ public sealed class HttpOtpSubmissionService(
 {
     private static readonly Uri StatusUri = new("http://127.0.0.1:4646/");
 
-    public async Task SubmitWhenRequestedAsync(string credentialKey, CancellationToken cancellationToken)
+    public async Task<bool> SubmitWhenRequestedAsync(string credentialKey, CancellationToken cancellationToken)
     {
         using var handler = new HttpClientHandler { UseProxy = false };
         using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(2) };
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(TimeSpan.FromSeconds(45));
         if (!await WaitForRequestAsync(client, timeout.Token))
-            return;
+            return false;
 
         DateTimeOffset now = timeProvider.GetUtcNow();
         TimeSpan delay = TotpGenerator.DelayUntilFreshCode(now);
@@ -32,6 +32,7 @@ public sealed class HttpOtpSubmissionService(
             using HttpResponseMessage response = await client.GetAsync(
                 new Uri($"http://127.0.0.1:4646/ffxivlauncher/{code}"), timeout.Token);
             response.EnsureSuccessStatusCode();
+            return true;
         }
         catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException)
         {

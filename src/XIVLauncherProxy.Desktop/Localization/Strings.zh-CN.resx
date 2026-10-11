@@ -59,7 +59,7 @@
   <data name="ConfigurationSaveFailed" xml:space="preserve"><value>无法保存设置，请检查软件配置目录的访问权限。</value></data><data name="AccountsReadFailed" xml:space="preserve"><value>无法读取 XIVLauncher 账号，请先在 XIVLauncher 中保存账号后重试。</value></data>
   <data name="CredentialSaveFailed" xml:space="preserve"><value>无法为当前 Windows 账号保护快捷登录密钥。</value></data><data name="CredentialReadFailed" xml:space="preserve"><value>当前 Windows 账号无法读取已保存的密钥，请重新保存。</value></data>
   <data name="LauncherSettingsMissing" xml:space="preserve"><value>没有找到 XIVLauncher 设置，请先正常运行一次 XIVLauncher。</value></data><data name="LauncherSettingsUpdateFailed" xml:space="preserve"><value>无法更新登录方式，请关闭 XIVLauncher 后重试。</value></data>
-  <data name="LauncherStartFailed" xml:space="preserve"><value>XIVLauncher 未能启动，请检查程序路径。</value></data><data name="OtpSubmitFailed" xml:space="preserve"><value>未能发送验证码，请先在 XIVLauncher 中手动输入并检查快捷登录设置。</value></data>
+  <data name="LauncherStartFailed" xml:space="preserve"><value>XIVLauncher 未能启动，请检查程序路径。</value></data>
   <data name="ProxyConnectionFailed" xml:space="preserve"><value>无法连接代理，请确认代理正在运行后重试。</value></data><data name="ShortcutUnsupported" xml:space="preserve"><value>当前系统无法创建 Windows 快捷方式。</value></data>
   <data name="ShortcutCreateFailed" xml:space="preserve"><value>无法生成快捷方式，请检查软件目录的访问权限。</value></data><data name="TotpSecretMissing" xml:space="preserve"><value>请输入 Base32 密钥或 otpauth:// 地址。</value></data>
   <data name="TotpSecretInvalidBase32" xml:space="preserve"><value>TOTP 密钥不是有效的 Base32 内容。</value></data><data name="TotpSecretTooShort" xml:space="preserve"><value>TOTP 密钥内容过短。</value></data>

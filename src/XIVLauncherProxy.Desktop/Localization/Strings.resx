@@ -93,7 +93,6 @@
   <data name="LauncherSettingsMissing" xml:space="preserve"><value>XIVLauncher settings were not found. Run XIVLauncher once and try again.</value></data>
   <data name="LauncherSettingsUpdateFailed" xml:space="preserve"><value>The login mode could not be updated. Close XIVLauncher and try again.</value></data>
   <data name="LauncherStartFailed" xml:space="preserve"><value>XIVLauncher did not start. Check the selected program path.</value></data>
-  <data name="OtpSubmitFailed" xml:space="preserve"><value>The verification code could not be sent. Enter it in XIVLauncher and check quick-login settings.</value></data>
   <data name="ProxyConnectionFailed" xml:space="preserve"><value>The proxy could not be reached. Check that it is running and try again.</value></data>
   <data name="ShortcutUnsupported" xml:space="preserve"><value>This system cannot create Windows shortcuts.</value></data>
   <data name="ShortcutCreateFailed" xml:space="preserve"><value>The shortcut could not be created. Check access to the application directory.</value></data>

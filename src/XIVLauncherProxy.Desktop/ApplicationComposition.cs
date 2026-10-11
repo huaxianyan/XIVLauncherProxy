@@ -13,6 +13,7 @@ using XIVLauncherProxy.Infrastructure.Configuration;
 using XIVLauncherProxy.Infrastructure.Networking;
 using XIVLauncherProxy.Infrastructure.Updates;
 using XIVLauncherProxy.Platform.Windows;
+using XIVLauncherProxy.Platform.Windows.Diagnostics;
 using XIVLauncherProxy.Platform.Windows.Launching;
 using XIVLauncherProxy.Platform.Windows.Security;
 using XIVLauncherProxy.Platform.Windows.Shortcuts;
@@ -72,7 +73,8 @@ public sealed class ApplicationComposition
             validator,
             new WindowsLauncherProcess(),
             new WindowsAutologinSessionFactory(WindowsPaths.LauncherSettingsPath),
-            otp);
+            otp,
+            new WindowsDiagnosticLog(WindowsPaths.DiagnosticLogPath));
         var updateProxy = new ConfigurableApplicationUpdateProxy();
         var updateClient = new HttpClient(new SocketsHttpHandler
         {
@@ -92,7 +94,7 @@ public sealed class ApplicationComposition
             new TcpProxyConnectionTester(),
             profiles,
             validator,
-            new ImportOtpFromImagesUseCase(new ImageSharpQrCodeDecoder()),
+            new ImportOtpFromImagesUseCase(new SkiaSharpQrCodeDecoder()),
             updateService,
             updateProxy,
             launch);

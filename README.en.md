@@ -66,6 +66,20 @@ Recommended safeguards:
 
 Clearing a secret removes its current encrypted record. Backups or filesystem snapshots may retain old ciphertext; after an actual compromise, re-enroll the authenticator rather than only deleting local files.
 
+## Launch diagnostics
+
+Once a shortcut starts XIVLauncher, XIVLauncher owns the login result. If that phase does not complete, for example XIVLauncher rejects the code, its local listener is already gone, or no code is requested, the configuration window is no longer opened. Such failures can come from XIVLauncher itself, and showing our settings window would point at the wrong cause.
+
+The shortcut exits silently and records the reason in:
+
+```text
+%LocalAppData%\XIVLauncherProxy\launch.log
+```
+
+The log records the time, an error code, and the launch profile ID only. It never contains TOTP secrets, generated codes, or account names. XIVLauncher's own message remains the only user-facing notice.
+
+Problems in this application or its configuration, such as a deleted launch profile, a missing secret, an invalid XIVLauncher path, or a launcher that cannot start, still open the configuration window with the matching message.
+
 ## Proxy scope
 
 Proxy-enabled profiles set `HTTP_PROXY`, `HTTPS_PROXY`, and optionally `ALL_PROXY` and `NO_PROXY` for XIVLauncher and its child processes. User and system proxy settings are not changed. Local OTP submission always connects directly to `127.0.0.1`.

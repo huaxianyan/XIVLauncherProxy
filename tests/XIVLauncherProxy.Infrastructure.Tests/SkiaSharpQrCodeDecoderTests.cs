@@ -1,13 +1,11 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 using XIVLauncherProxy.Infrastructure.Authentication;
 using ZXing;
 using ZXing.Common;
-using ZXing.ImageSharp;
 
 namespace XIVLauncherProxy.Infrastructure.Tests;
 
-public sealed class ImageSharpQrCodeDecoderTests
+public sealed class SkiaSharpQrCodeDecoderTests
 {
     [Fact]
     public void AuthenticatorExportImageReturnsItsMigrationUri()
@@ -16,15 +14,18 @@ public sealed class ImageSharpQrCodeDecoderTests
         string path = Path.Combine(Path.GetTempPath(), $"xivlauncherproxy-{Guid.NewGuid():N}.png");
         try
         {
-            var writer = new ZXing.ImageSharp.BarcodeWriter<Rgba32>
+            var writer = new ZXing.SkiaSharp.BarcodeWriter
             {
                 Format = BarcodeFormat.QR_CODE,
                 Options = new EncodingOptions { Width = 500, Height = 500, Margin = 2 },
             };
-            using Image<Rgba32> image = writer.Write(migration);
-            image.SaveAsPng(path);
+            using SKBitmap image = writer.Write(migration);
+            using (SKImage encoded = SKImage.FromBitmap(image))
+            using (SKData data = encoded.Encode(SKEncodedImageFormat.Png, 100))
+            using (FileStream file = File.Create(path))
+                data.SaveTo(file);
 
-            IReadOnlyList<string> values = new ImageSharpQrCodeDecoder().Decode(path);
+            IReadOnlyList<string> values = new SkiaSharpQrCodeDecoder().Decode(path);
 
             Assert.Contains(migration, values);
         }

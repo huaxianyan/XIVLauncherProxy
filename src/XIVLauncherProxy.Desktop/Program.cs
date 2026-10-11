@@ -24,27 +24,28 @@ internal static class Program
             StartupState.Composition = ApplicationComposition.Create();
             if (args.Any(x => x.Equals("--launch", StringComparison.OrdinalIgnoreCase)))
             {
-                string? profileId = args.FirstOrDefault(x => x.StartsWith("--profile=", StringComparison.OrdinalIgnoreCase))?[10..];
-                AppConfiguration configuration = StartupState.Composition.Settings.Load();
-                LaunchProfile? profile = configuration.LaunchProfiles.FirstOrDefault(
-                    x => x.Id.Equals(profileId, StringComparison.OrdinalIgnoreCase));
-                if (profile is null)
-                    throw new ProxyException("ProfileNotFound");
-                StartupState.Composition.LaunchProfile.ExecuteAsync(configuration, profile)
-                    .GetAwaiter().GetResult();
+                RunLaunchProfile(args);
                 return;
             }
         }
         catch (Exception exception)
         {
-            StartupState.ErrorCode = exception switch
-            {
-                ProxyException proxy => proxy.Code,
-                FormatException format => format.Message,
-                _ => "UnexpectedError",
-            };
+            StartupState.ErrorCode = ErrorCodes.From(exception);
         }
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
+
+    private static void RunLaunchProfile(string[] args)
+    {
+        string? profileId = args.FirstOrDefault(
+            x => x.StartsWith("--profile=", StringComparison.OrdinalIgnoreCase))?[10..];
+        AppConfiguration configuration = StartupState.Composition!.Settings.Load();
+        LaunchProfile? profile = configuration.LaunchProfiles.FirstOrDefault(
+            x => x.Id.Equals(profileId, StringComparison.OrdinalIgnoreCase));
+        if (profile is null)
+            throw new ProxyException("ProfileNotFound");
+        StartupState.Composition.LaunchProfile.ExecuteAsync(configuration, profile)
+            .GetAwaiter().GetResult();
     }
 
     public static AppBuilder BuildAvaloniaApp() =>
