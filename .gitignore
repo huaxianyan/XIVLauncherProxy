@@ -4,6 +4,7 @@ tests/**/bin/
 tests/**/obj/
 .dotnet/
 dist/
+__pycache__/
 *.user
 *.lnk
 
