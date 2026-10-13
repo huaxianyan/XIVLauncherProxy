@@ -121,6 +121,10 @@ Domain、Application、通用 Infrastructure 和 Avalonia UI 不依赖具体桌�
 
 界面文案使用 `.resx` 资源。英文是缺失翻译时的回退语言，当前同时提供简体中文资源。
 
+## 开发交接
+
+当前主线、安全边界、SDK 匹配待办和下一步见 [交接记录](docs/STATUS.md)。
+
 ## 构建
 
 需要 .NET 10 SDK：
